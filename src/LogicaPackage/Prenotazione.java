@@ -3,13 +3,15 @@ package LogicaPackage;
 import java.util.Date;
 
 public class Prenotazione {
+    private int codiceAula;
     private Date data;
-    private Date oraInizio;
-    private Date oraFine;
+    private int oraInizio;
+    private int oraFine;
     private String nomePrenotante;
     private String motivazionePrenotazione;
 
-    public Prenotazione(Date data, Date oraInizio, Date oraFine, String nomePrenotante, String motivazionePrenotazione){
+    public Prenotazione(int codiceAula, Date data, int oraInizio, int oraFine, String nomePrenotante, String motivazionePrenotazione){
+        this.codiceAula = codiceAula;
         this.data = data;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
@@ -25,19 +27,19 @@ public class Prenotazione {
         this.data = data;
     }
 
-    public Date getOraInizio() {
+    public int getOraInizio() {
         return oraInizio;
     }
 
-    public void setOraInizio(Date oraInizio) {
+    public void setOraInizio(int oraInizio) {
         this.oraInizio = oraInizio;
     }
 
-    public Date getOraFine() {
+    public int getOraFine() {
         return oraFine;
     }
 
-    public void setOraFine(Date oraFine) {
+    public void setOraFine(int oraFine) {
         this.oraFine = oraFine;
     }
 
@@ -55,5 +57,21 @@ public class Prenotazione {
 
     public void setMotivazionePrenotazione(String motivazionePrenotazione) {
         this.motivazionePrenotazione = motivazionePrenotazione;
+    }
+
+    @Override
+    public String toString(){
+        return "Nome prenotante: " + getNomePrenotante() +
+                "\nData: " + getData().toString() +
+                "\nOra inizio: " + getOraInizio() + " Ora fine: " + getOraFine() +
+                "\nMotivazione: " + getMotivazionePrenotazione();
+    }
+
+    public int getCodiceAula() {
+        return codiceAula;
+    }
+
+    public void setCodiceAula(int codiceAula) {
+        this.codiceAula = codiceAula;
     }
 }

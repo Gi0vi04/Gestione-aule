@@ -1,4 +1,4 @@
-package UIPackage.Tabella;
+package UIPackage.NuovaPrenotazione;
 
 import javax.swing.*;
 import java.text.ParseException;
@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
-
     private String datePattern = "dd/MM/yyyy";
     private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
@@ -21,8 +20,6 @@ public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
             Calendar cal = (Calendar) value;
             return dateFormatter.format(cal.getTime());
         }
-
         return "";
     }
-
 }
