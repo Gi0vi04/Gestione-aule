@@ -8,18 +8,12 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class TableModel extends AbstractTableModel {
-    private final String[] columnNames = Stream.concat(Stream.of("Orario"), Arrays.stream(COSTANTI.aule))
-            .toArray(String[]::new);;
-
-
+    //Creo i nomi delle colonne aggiungendo alle aule la colonna "Orario"
+    private final String[] columnNames = COSTANTI.aule;
     private final Object[][] data;
 
     public TableModel(){
         data = new String[11][columnNames.length];
-
-        for (int i = 0; i < 11; i++) {
-            data[i][0] = COSTANTI.orariAmmessi[i]; // Prima colonna con gli orari
-        }
     }
 
     @Override
@@ -40,11 +34,6 @@ public class TableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         return columnNames[columnIndex];
-    }
-
-    @Override
-    public boolean isCellEditable(int row, int col){
-        return col > 0;
     }
 
     @Override

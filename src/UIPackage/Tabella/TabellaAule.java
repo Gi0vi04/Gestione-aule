@@ -1,17 +1,20 @@
 package UIPackage.Tabella;
 
 import LogicaPackage.Prenotazione;
-import UIPackage.NuovaPrenotazione.NuovaPrenotazione;
-import UIPackage.NuovaPrenotazione.NuovaPrenotazioneListener;
+import UIPackage.Tabella.NuovaPrenotazione.NuovaPrenotazione;
+import UIPackage.Tabella.NuovaPrenotazione.NuovaPrenotazioneListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
-    private JTable table;
+    public JTable table;
     private ArrayList<Prenotazione> prenotazioni;
 
     public TabellaAule(ArrayList<Prenotazione> prenotazioni) {
@@ -23,9 +26,10 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
 
     public void setupTable(){
         table = new JTable(new TableModel());
+
         //Imposto l'altezza delle righe
         table.setRowHeight(50);
-        table.setAlignmentY(CENTER_ALIGNMENT);
+        table.setAlignmentX(CENTER_ALIGNMENT);
         table.setFillsViewportHeight(true);
         // Configura il ridimensionamento delle colonne
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -37,38 +41,57 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 int row = table.getSelectedRow();
                 int column = table.getSelectedColumn();
 
-                // Evita di aprire il frame per l'intestazione o la colonna "Orario"
-                if (row != -1 && column > 0) {
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this);
-                    nuovaPrenotazione.setVisible(true);
-                }
+                NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this);
+                nuovaPrenotazione.setVisible(true);
             }
         });
 
-        // Aggiungi la tabella in uno JScrollPane e posizionalo al centro del panel
+        // Aggiungo un ComponentListener alla tabella per gestire il ridimensionamento
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // Calcola la nuova altezza delle righe
+                int height = getHeight();
+                int headerHeight = table.getTableHeader().getHeight();
+                int rowCount = table.getRowCount();
+
+                // Sottrai l'altezza dell'header e dividi per il numero di righe
+                int newRowHeight = (height - headerHeight) / rowCount;
+
+                // Imposta la nuova altezza (con un minimo di 50 pixel)
+                table.setRowHeight(Math.max(50, newRowHeight));
+            }
+        });
+
+        // Aggiungo la tabella in uno JScrollPane e lo posiziono al centro del panel
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        caricaPrenotazioni();
-
+        //Carico le prenotazioni (dall'inizio) e aggiungo la tabella al panel
+        caricaPrenotazioni(0);
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void caricaPrenotazioni(){
-        for(int i = 0; i < prenotazioni.size(); i++){
-            int oraInizio = prenotazioni.get(i).getOraInizio();
-            int oraFine = prenotazioni.get(i).getOraFine();
+    private void caricaPrenotazioni(int start){
+        for(int i = start; i < prenotazioni.size(); i++){
+            Prenotazione prenotazione = prenotazioni.get(i);
 
-            for(int j = oraInizio; j <= oraFine; j++){
-                table.setValueAt(prenotazioni.get(i).getNomePrenotante(), j, prenotazioni.get(i).getCodiceAula());
+            //Filtro solo le prenotazioni della data selezionata
+            if(prenotazione.getData().isEqual(LocalDate.now())){
+                int oraInizio = prenotazioni.get(i).getOraInizio();
+                int oraFine = prenotazioni.get(i).getOraFine();
+
+                for(int j = oraInizio; j <= oraFine; j++){
+                    table.setValueAt(prenotazioni.get(i).getNomePrenotante(), j, prenotazioni.get(i).getCodiceAula());
+                }
             }
         }
     }
 
     @Override
     public void onPrenotazioneAggiunta(Prenotazione prenotazione) {
+        int nextStart = prenotazioni.size();
+
         prenotazioni.add(prenotazione);
-        caricaPrenotazioni();
+        caricaPrenotazioni(nextStart);
     }
 }

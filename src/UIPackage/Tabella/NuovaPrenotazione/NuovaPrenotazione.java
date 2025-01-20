@@ -1,25 +1,25 @@
-package UIPackage.NuovaPrenotazione;
+package UIPackage.Tabella.NuovaPrenotazione;
 
 import LogicaPackage.COSTANTI;
 import LogicaPackage.Prenotazione;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Properties;
 
 public class NuovaPrenotazione extends JFrame implements ActionListener {
-    private JComboBox<String> oraInizioCombo;
+    private final JComboBox<String> oraInizioCombo = new JComboBox<>(COSTANTI.orariAmmessi);
     private JComboBox<String> oraFineCombo;
+    private JButton buttonConferma = new JButton("Conferma");
+    private JTextField nomeTextField = new JTextField(20);
 
     public NuovaPrenotazione(int row, int column, NuovaPrenotazioneListener nuovaPrenotazioneListener){
         super("Nuova prenotazione");
@@ -33,17 +33,33 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         JPanel nomePanel = new JPanel();
         nomePanel.setLayout(new BoxLayout(nomePanel, BoxLayout.X_AXIS));
 
-        JTextField nomeTextField = new JTextField(20);
+        nomeTextField.setFont(new Font("Dialog", Font.BOLD, 12));
         nomeTextField.setMargin(new Insets(2,2,2,2));
+        nomeTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkValidity();
+            }
 
-        nomePanel.add(new JLabel("Nome"));
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkValidity();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                checkValidity();
+            }
+        });
+
+        nomePanel.add(new JLabel("Nome*"));
         nomePanel.add(Box.createHorizontalStrut(10));
         nomePanel.add(nomeTextField);
 
         //Sezione selezione aula
         JPanel selezioneAulaPanel = new JPanel(new BorderLayout());
         JComboBox<String> aulaComboBox = new JComboBox<>(COSTANTI.aule);
-        aulaComboBox.setSelectedIndex(column - 1);
+        aulaComboBox.setSelectedIndex(column);
         selezioneAulaPanel.add(aulaComboBox, BorderLayout.CENTER);
 
         //Sezione motivazione
@@ -53,27 +69,12 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         motivazionePanel.add(motivazioneComboBox);
 
         //Sezione data
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-
-        JPanel dataPanel = new JPanel(new BorderLayout());
-        UtilDateModel model = new UtilDateModel();
-        model.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-        model.setSelected(true);
-
-        Properties p = new Properties();
-        p.put("text.today", "Oggi");
-        p.put("text.month", "Mese");
-        p.put("text.year", "Anno");
-        p.put("text.day", "Giorno");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-        dataPanel.add(datePicker, BorderLayout.CENTER);
+        JPanel datePanel = new JPanel(new BorderLayout());
 
         //Sezione orario
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
-        oraInizioCombo = new JComboBox<>(COSTANTI.orariAmmessi);
+
         oraFineCombo = new JComboBox<>(COSTANTI.orariAmmessi);
         oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
         oraInizioCombo.setSelectedIndex(row);
@@ -83,11 +84,12 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
 
         //Sezione CTA
         JPanel panelCTA = new JPanel(new BorderLayout());
-        JButton buttonConferma = new JButton("Conferma");
         JButton buttonAnnulla = new JButton("Annulla");
         buttonAnnulla.addActionListener(this);
+
+        buttonConferma.setEnabled(false);
         buttonConferma.addActionListener(e -> {
-            Prenotazione prenotazione = new Prenotazione(aulaComboBox.getSelectedIndex() + 1, (Date) datePicker.getModel().getValue(),
+            Prenotazione prenotazione = new Prenotazione(aulaComboBox.getSelectedIndex(), LocalDate.now(),
                     oraInizioCombo.getSelectedIndex(),
                     oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex(),
                     nomeTextField.getText(),
@@ -103,7 +105,7 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         mainPanel.add(selezioneAulaPanel);
         mainPanel.add(motivazionePanel);
         mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(dataPanel);
+        mainPanel.add(datePanel);
         mainPanel.add(orarioPanel);
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(panelCTA);
@@ -124,5 +126,15 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         dispose();
+    }
+
+    public void checkValidity(){
+        boolean validity = true;
+
+        //Controllo che il nome sia inserito
+        if (nomeTextField.getText().isEmpty())
+            validity = false;
+
+        buttonConferma.setEnabled(validity);
     }
 }
