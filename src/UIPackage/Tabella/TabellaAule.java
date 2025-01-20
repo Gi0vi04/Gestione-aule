@@ -11,6 +11,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
@@ -76,7 +77,8 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
             Prenotazione prenotazione = prenotazioni.get(i);
 
             //Filtro solo le prenotazioni della data selezionata
-            if(prenotazione.getData().isEqual(LocalDate.now())){
+            LocalDate localDatePrenotazione = prenotazione.getData().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if(localDatePrenotazione.isEqual(LocalDate.now())){
                 int oraInizio = prenotazioni.get(i).getOraInizio();
                 int oraFine = prenotazioni.get(i).getOraFine();
 

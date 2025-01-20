@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 public class NuovaPrenotazione extends JFrame implements ActionListener {
@@ -69,7 +70,14 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         motivazionePanel.add(motivazioneComboBox);
 
         //Sezione data
-        JPanel datePanel = new JPanel(new BorderLayout());
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        calendar.add(Calendar.YEAR, 1);
+        Date endDate = calendar.getTime();
+
+        JSpinner dateSpinner = new JSpinner(new SpinnerDateModel(today,today,endDate,Calendar.MONTH));
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
+        dateSpinner.setEditor(dateEditor);
 
         //Sezione orario
         JPanel orarioPanel = new JPanel();
@@ -89,7 +97,7 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
 
         buttonConferma.setEnabled(false);
         buttonConferma.addActionListener(e -> {
-            Prenotazione prenotazione = new Prenotazione(aulaComboBox.getSelectedIndex(), LocalDate.now(),
+            Prenotazione prenotazione = new Prenotazione(aulaComboBox.getSelectedIndex(), (Date) dateSpinner.getValue(),
                     oraInizioCombo.getSelectedIndex(),
                     oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex(),
                     nomeTextField.getText(),
@@ -105,7 +113,7 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         mainPanel.add(selezioneAulaPanel);
         mainPanel.add(motivazionePanel);
         mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(datePanel);
+        mainPanel.add(dateSpinner);
         mainPanel.add(orarioPanel);
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(panelCTA);

@@ -5,13 +5,13 @@ import java.util.Date;
 
 public class Prenotazione {
     private int codiceAula;
-    private LocalDate data;
+    private Date data;
     private int oraInizio;
     private int oraFine;
     private String nomePrenotante;
     private String motivazionePrenotazione;
 
-    public Prenotazione(int codiceAula, LocalDate data, int oraInizio, int oraFine, String nomePrenotante, String motivazionePrenotazione){
+    public Prenotazione(int codiceAula, Date data, int oraInizio, int oraFine, String nomePrenotante, String motivazionePrenotazione){
         this.codiceAula = codiceAula;
         this.data = data;
         this.oraInizio = oraInizio;
@@ -20,11 +20,11 @@ public class Prenotazione {
         this.motivazionePrenotazione = motivazionePrenotazione;
     }
 
-    public LocalDate getData() {
+    public Date getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(Date data) {
         this.data = data;
     }
 
