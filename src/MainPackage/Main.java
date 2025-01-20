@@ -2,7 +2,6 @@ package MainPackage;
 
 import LogicaPackage.Prenotazione;
 import UIPackage.InformazioniLaterali.Intestazione;
-import UIPackage.InformazioniLaterali.OrarioLaterale;
 import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
@@ -21,13 +20,11 @@ public class Main {
 
         //Creazione delle informazioni laterali
         Intestazione intestazione = new Intestazione();
-        OrarioLaterale orarioLaterale = new OrarioLaterale();
         // Creazione della tabella all'interno di uno JScrollPane
         TabellaAule tabellaAule = new TabellaAule(prenotazioni);
 
         //Inserisco gli elementi nel frame
         mainFrame.add(intestazione, BorderLayout.NORTH);
-        mainFrame.add(orarioLaterale, BorderLayout.WEST);
         mainFrame.add(tabellaAule, BorderLayout.CENTER);
 
         // Rendo visibile il frame
