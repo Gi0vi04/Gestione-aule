@@ -1,8 +1,8 @@
 package UIPackage.Tabella.NuovaPrenotazione;
 
-import LogicaPackage.COSTANTI;
+import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
-
+import LogicaPackage.Utils.Costanti;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -10,17 +10,18 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 public class NuovaPrenotazione extends JFrame implements ActionListener {
-    private final JComboBox<String> oraInizioCombo = new JComboBox<>(COSTANTI.orariAmmessi);
-    private JComboBox<String> oraFineCombo;
-    private JButton buttonConferma = new JButton("Conferma");
-    private JTextField nomeTextField = new JTextField(20);
+    private final JTextField nomeTextField;
+    private final JComboBox<Aula> aulaComboBox;
+    private final JComboBox<String> motivazioneComboBox;
+    private final JSpinner dateSpinner;
+    private final JComboBox<String> oraInizioCombo;
+    private final JComboBox<String> oraFineCombo;
+    private final JButton buttonConferma;
 
     public NuovaPrenotazione(int row, int column, NuovaPrenotazioneListener nuovaPrenotazioneListener){
         super("Nuova prenotazione");
@@ -30,23 +31,22 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(new EmptyBorder(10,10,10,10));
 
-        //Sezione nome prenotante
+        // Sezione inserimento "Nome prenotante"
         JPanel nomePanel = new JPanel();
         nomePanel.setLayout(new BoxLayout(nomePanel, BoxLayout.X_AXIS));
-
+        nomeTextField = new JTextField(20);
         nomeTextField.setFont(new Font("Dialog", Font.BOLD, 12));
         nomeTextField.setMargin(new Insets(2,2,2,2));
+
         nomeTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 checkValidity();
             }
-
             @Override
             public void removeUpdate(DocumentEvent e) {
                 checkValidity();
             }
-
             @Override
             public void changedUpdate(DocumentEvent e) {
                 checkValidity();
@@ -57,33 +57,41 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         nomePanel.add(Box.createHorizontalStrut(10));
         nomePanel.add(nomeTextField);
 
-        //Sezione selezione aula
+        // Sezione selezione "Aula"
         JPanel selezioneAulaPanel = new JPanel(new BorderLayout());
-        JComboBox<String> aulaComboBox = new JComboBox<>(COSTANTI.aule);
-        aulaComboBox.setSelectedIndex(column);
+        aulaComboBox = new JComboBox<>(Costanti.AULE);
+
+        aulaComboBox.setSelectedIndex(column - 1);
+
         selezioneAulaPanel.add(aulaComboBox, BorderLayout.CENTER);
 
-        //Sezione motivazione
+        // Sezione inserimento "Motivazione"
         JPanel motivazionePanel = new JPanel();
         motivazionePanel.setLayout(new BoxLayout(motivazionePanel, BoxLayout.X_AXIS));
-        JComboBox<String> motivazioneComboBox = new JComboBox<>(COSTANTI.motivazioni);
+        motivazioneComboBox = new JComboBox<>(Costanti.MOTIVAZIONI);
+
         motivazionePanel.add(motivazioneComboBox);
 
-        //Sezione data
+        // Sezione inserimento "Data"
         Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
-        calendar.add(Calendar.YEAR, 1);
+        Date today = calendar.getTime(); // Data di oggi
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date startDate = calendar.getTime();
+        calendar.add(Calendar.YEAR, 1);  // Data limite di un anno avanti
         Date endDate = calendar.getTime();
 
-        JSpinner dateSpinner = new JSpinner(new SpinnerDateModel(today,today,endDate,Calendar.MONTH));
+        dateSpinner = new JSpinner(new SpinnerDateModel(today, startDate, endDate, Calendar.DAY_OF_MONTH));
         JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
-        dateSpinner.setEditor(dateEditor);
 
-        //Sezione orario
+        dateSpinner.setEditor(dateEditor);
+        dateSpinner.setValue(today);
+
+        // Sezione inserimento "Orario"
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
+        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(Costanti.ORARI_AMMESSI, 0, Costanti.ORARI_AMMESSI.length - 1));
+        oraFineCombo = new JComboBox<>(Costanti.ORARI_AMMESSI);
 
-        oraFineCombo = new JComboBox<>(COSTANTI.orariAmmessi);
         oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
         oraInizioCombo.setSelectedIndex(row);
 
@@ -92,19 +100,12 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
 
         //Sezione CTA
         JPanel panelCTA = new JPanel(new BorderLayout());
+        buttonConferma = new JButton("Conferma");
         JButton buttonAnnulla = new JButton("Annulla");
         buttonAnnulla.addActionListener(this);
 
         buttonConferma.setEnabled(false);
-        buttonConferma.addActionListener(e -> {
-            Prenotazione prenotazione = new Prenotazione(aulaComboBox.getSelectedIndex(), (Date) dateSpinner.getValue(),
-                    oraInizioCombo.getSelectedIndex(),
-                    oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex(),
-                    nomeTextField.getText(),
-                    (String) motivazioneComboBox.getSelectedItem());
-            nuovaPrenotazioneListener.onPrenotazioneAggiunta(prenotazione);
-            dispose();
-        });
+        buttonConferma.addActionListener(e -> creaNuovaPrenotazione(nuovaPrenotazioneListener));
         panelCTA.add(buttonAnnulla, BorderLayout.WEST);
         panelCTA.add(buttonConferma, BorderLayout.CENTER);
 
@@ -120,13 +121,24 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
 
         add(mainPanel);
         pack();
+        super.setLocationRelativeTo(null);
+    }
+
+    private void creaNuovaPrenotazione(NuovaPrenotazioneListener nuovaPrenotazioneListener) {
+        Prenotazione prenotazione = new Prenotazione((Aula) aulaComboBox.getSelectedItem(), (Date) dateSpinner.getValue(),
+                oraInizioCombo.getSelectedIndex(),
+                oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex() + 1,
+                nomeTextField.getText(),
+                (String) motivazioneComboBox.getSelectedItem());
+        nuovaPrenotazioneListener.onPrenotazioneAggiunta(prenotazione);
+        dispose();
     }
 
     private void aggiornaOrarioFineAmmesso(){
         int oraInizioSelezionato = oraInizioCombo.getSelectedIndex();
 
         oraFineCombo.removeAllItems();
-        for(int i = oraInizioSelezionato; i < COSTANTI.orariAmmessi.length; i++) oraFineCombo.addItem(COSTANTI.orariAmmessi[i]);
+        for(int i = oraInizioSelezionato + 1; i < Costanti.ORARI_AMMESSI.length; i++) oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
 
         oraFineCombo.setSelectedIndex(0);
     }

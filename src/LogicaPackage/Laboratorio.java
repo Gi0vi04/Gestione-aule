@@ -4,8 +4,8 @@ public class Laboratorio extends Aula {
     private boolean presenzaPc;
     private boolean presenzaPreseElettriche;
 
-    public Laboratorio(int numeroAula, int capienza, boolean presenzaPc, boolean presenzaPreseElettriche) {
-        super(numeroAula, capienza);
+    public Laboratorio(int numeroAula, int capienza, boolean presenzaPc, boolean presenzaPreseElettriche, String nomeAula) {
+        super(numeroAula, capienza, nomeAula);
         this.presenzaPc = presenzaPc;
         this.presenzaPreseElettriche = presenzaPreseElettriche;
     }

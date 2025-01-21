@@ -18,10 +18,10 @@ public class Main {
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setSize(700,610);
 
-        //Creazione delle informazioni laterali
-        Intestazione intestazione = new Intestazione();
         // Creazione della tabella all'interno di uno JScrollPane
         TabellaAule tabellaAule = new TabellaAule(prenotazioni);
+        //Creazione delle informazioni laterali
+        Intestazione intestazione = new Intestazione(tabellaAule);
 
         //Inserisco gli elementi nel frame
         mainFrame.add(intestazione, BorderLayout.NORTH);

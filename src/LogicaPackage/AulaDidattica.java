@@ -6,8 +6,8 @@ public class AulaDidattica extends Aula implements Serializable {
     private boolean presenzaLavagna;
     private boolean presenzaVideoproiettore;
 
-    public AulaDidattica(int numeroAula, int capienza, boolean presenzaLavagna, boolean presenzaVideoproiettore) {
-        super(numeroAula, capienza);
+    public AulaDidattica(int numeroAula, int capienza, boolean presenzaLavagna, boolean presenzaVideoproiettore, String nomeAula) {
+        super(numeroAula, capienza, nomeAula);
         this.presenzaLavagna = presenzaLavagna;
         this.presenzaVideoproiettore = presenzaVideoproiettore;
     }
