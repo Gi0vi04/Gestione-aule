@@ -15,7 +15,7 @@ public final class Costanti {
 
     public static final String[] ORARI_AMMESSI = {
             "08:00", "09:00", "10:00", "11:00", "12:00",
-            "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"};
+            "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",};
 
     public static final Aula[] AULE = {
             new AulaDidattica(1,100,true,false, "Didattica 1"),

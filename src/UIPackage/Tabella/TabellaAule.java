@@ -147,6 +147,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 throw new RuntimeException(e);
             } finally {
                 setPrenotazioni(prenotazioniCaricate);
+                clearTable();
                 aggiornaPrenotazioni(0);
             }
         } else {
@@ -155,8 +156,6 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
     }
 
     private void aggiornaPrenotazioni(int start){
-        clearTable();
-
         for(int i = start; i < prenotazioni.size(); i++){
             Prenotazione prenotazione = prenotazioni.get(i);
 
@@ -173,7 +172,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
         AbstractTableModel model = (AbstractTableModel) table.getModel();
 
         for (int row = 0; row < model.getRowCount(); row++) {
-            for (int col = 0; col < model.getColumnCount(); col++) {
+            for (int col = 1; col < model.getColumnCount(); col++) {
                 model.setValueAt(null, row, col);
             }
         }

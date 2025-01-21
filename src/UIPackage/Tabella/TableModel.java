@@ -18,9 +18,9 @@ public class TableModel extends AbstractTableModel {
             columnNames[i + 1] = Costanti.AULE[i].getNomeAula();
         }
 
-        data = new String[11][columnNames.length];
-        for(int i = 0; i < 11; i++){
-            data[i][0] = Costanti.ORARI_AMMESSI[i];
+        data = new String[10][columnNames.length];
+        for(int i = 0; i < 10; i++){
+            data[i][0] = Costanti.ORARI_AMMESSI[i] + " - " + Costanti.ORARI_AMMESSI[i + 1];
         }
     }
 
