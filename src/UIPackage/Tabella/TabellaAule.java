@@ -120,7 +120,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("File prenotazioni (*.prenotazioni)", "prenotazioni");
         fileChooser.setFileFilter(filter);
 
-        int userSelection = fileChooser.showSaveDialog(null);
+        int userSelection = fileChooser.showOpenDialog(null);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToLoad = fileChooser.getSelectedFile();
 
