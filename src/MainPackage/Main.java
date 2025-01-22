@@ -16,7 +16,8 @@ public class Main {
         JFrame mainFrame = new JFrame("Gestione aule");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLayout(new BorderLayout());
-        mainFrame.setSize(700,610);
+        mainFrame.setSize(800,720);
+        mainFrame.setMinimumSize(new Dimension(700,610));
 
         // Creazione della tabella all'interno di uno JScrollPane
         TabellaAule tabellaAule = new TabellaAule(prenotazioni);

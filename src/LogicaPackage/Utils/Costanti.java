@@ -4,9 +4,6 @@ import LogicaPackage.Aula;
 import LogicaPackage.AulaDidattica;
 import LogicaPackage.Laboratorio;
 
-import java.util.List;
-import java.util.Collections;
-
 public final class Costanti {
 
     private Costanti() {

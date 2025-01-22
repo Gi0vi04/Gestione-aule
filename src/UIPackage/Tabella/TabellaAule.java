@@ -41,6 +41,8 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
         table.setRowHeight(25);
         table.setAlignmentX(CENTER_ALIGNMENT);
         table.setFillsViewportHeight(true);
+        table.setRowSelectionAllowed(false);
+        table.setColumnSelectionAllowed(true);
         // Configura il ridimensionamento delle colonne
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
@@ -71,7 +73,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 int newRowHeight = (height - headerHeight) / rowCount;
 
                 // Imposta la nuova altezza (con un minimo di 50 pixel)
-                table.setRowHeight(Math.max(25, newRowHeight));
+                table.setRowHeight(Math.max(30, newRowHeight));
             }
         });
 
