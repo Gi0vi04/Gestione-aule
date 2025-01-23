@@ -95,7 +95,28 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
 
     public void salvaPrenotazioni(){
         // Crea un JFileChooser
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(){
+            @Override
+            public void approveSelection(){
+                File file = getSelectedFile();
+                if(file.exists() && getDialogType() == SAVE_DIALOG){
+                    int result = JOptionPane.showConfirmDialog(this,"Il file esiste giá, vuoi sovrascriverlo?","File giá esistente",JOptionPane.YES_NO_CANCEL_OPTION);
+                    switch(result){
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            return;
+                        case JOptionPane.CLOSED_OPTION:
+                            return;
+                        case JOptionPane.CANCEL_OPTION:
+                            cancelSelection();
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
         fileChooser.setDialogTitle("Salva le prenotazioni");
 
         // Imposta un filtro per i file con estensione ".prenotazioni"
@@ -108,7 +129,9 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
 
             FileOutputStream fileOutputStream = null;
             try {
-                fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile() + ".prenotazioni");
+                if(!fileToSave.getName().endsWith(".prenotazioni")) fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile() + ".prenotazioni");
+                else fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile());
+
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
                 for (Prenotazione prenotazione : prenotazioni) objectOutputStream.writeObject(prenotazione);
