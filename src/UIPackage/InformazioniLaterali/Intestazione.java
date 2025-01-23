@@ -6,6 +6,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Intestazione extends JPanel {
@@ -19,11 +22,30 @@ public class Intestazione extends JPanel {
         setBorder(new EmptyBorder(5,5,5,5));
 
         //Sezione modifica data
-//        JPanel editDatePanel = new JPanel();
-//        editDatePanel.setBackground(Color.DARK_GRAY);
-//        JLabel dataVisualizzata = new JLabel("Data visualizzata: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-//        dataVisualizzata.setForeground(Color.WHITE);
-//        editDatePanel.add(dataVisualizzata);
+        JPanel datePanel = new JPanel();
+        datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.X_AXIS));
+        datePanel.setBackground(Color.DARK_GRAY);
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        calendar.add(Calendar.YEAR, -1);
+        Date startDate = calendar.getTime();
+        calendar.add(Calendar.YEAR, 2);
+        Date endDate = calendar.getTime();
+
+        JSpinner dateSpinner = new JSpinner(new SpinnerDateModel(today, startDate, endDate, Calendar.DAY_OF_MONTH));
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
+        dateSpinner.setEditor(dateEditor);
+        dateSpinner.addChangeListener(e -> {
+            Date dateSelected = (Date) dateSpinner.getValue();
+            LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            tabellaAule.changeCurrentDate(localDateSelected);
+        });
+
+        JLabel dataVisualizzataLabel = new JLabel("Data visualizzata: ");
+        dataVisualizzataLabel.setForeground(Color.WHITE);
+        datePanel.add(dataVisualizzataLabel);
+        datePanel.add(dateSpinner);
 
         //Sezione CTA
         JPanel ctaPanel = new JPanel();
@@ -36,6 +58,7 @@ public class Intestazione extends JPanel {
         ctaPanel.add(saveButton);
         ctaPanel.add(loadButton);
 
+        add(datePanel, BorderLayout.WEST);
         add(ctaPanel,BorderLayout.EAST);
     }
 }

@@ -10,6 +10,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +25,7 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
     private final JComboBox<String> oraFineCombo;
     private final JButton buttonConferma;
 
-    public NuovaPrenotazione(int row, int column, NuovaPrenotazioneListener nuovaPrenotazioneListener){
+    public NuovaPrenotazione(int row, int column, NuovaPrenotazioneListener nuovaPrenotazioneListener, LocalDate currentDate){
         super("Nuova prenotazione");
         setResizable(false);
 
@@ -74,17 +76,15 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
 
         // Sezione inserimento "Data"
         Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime(); // Data di oggi
+        Date today = calendar.getTime();
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         Date startDate = calendar.getTime();
-        calendar.add(Calendar.YEAR, 1);  // Data limite di un anno avanti
+        calendar.add(Calendar.YEAR, 1);
         Date endDate = calendar.getTime();
 
-        dateSpinner = new JSpinner(new SpinnerDateModel(today, startDate, endDate, Calendar.DAY_OF_MONTH));
+        dateSpinner = new JSpinner(new SpinnerDateModel(Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant()), startDate, endDate, Calendar.DAY_OF_MONTH));
         JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
-
         dateSpinner.setEditor(dateEditor);
-        dateSpinner.setValue(today);
 
         // Sezione inserimento "Orario"
         JPanel orarioPanel = new JPanel();
@@ -125,7 +125,11 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
     }
 
     private void creaNuovaPrenotazione(NuovaPrenotazioneListener nuovaPrenotazioneListener) {
-        Prenotazione prenotazione = new Prenotazione((Aula) aulaComboBox.getSelectedItem(), (Date) dateSpinner.getValue(),
+        Date dateSelected = (Date) dateSpinner.getValue();
+        LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        Prenotazione prenotazione = new Prenotazione((Aula) aulaComboBox.getSelectedItem(),
+                localDateSelected,
                 oraInizioCombo.getSelectedIndex(),
                 oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex() + 1,
                 nomeTextField.getText(),

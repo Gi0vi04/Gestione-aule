@@ -6,13 +6,13 @@ import java.util.Date;
 
 public class Prenotazione implements Serializable {
     private Aula aula;
-    private Date data;
+    private LocalDate data;
     private int oraInizio;
     private int oraFine;
     private String nomePrenotante;
     private String motivazionePrenotazione;
 
-    public Prenotazione(Aula aula, Date data, int oraInizio, int oraFine, String nomePrenotante, String motivazionePrenotazione){
+    public Prenotazione(Aula aula, LocalDate data, int oraInizio, int oraFine, String nomePrenotante, String motivazionePrenotazione){
         this.aula = aula;
         this.data = data;
         this.oraInizio = oraInizio;
@@ -21,11 +21,11 @@ public class Prenotazione implements Serializable {
         this.motivazionePrenotazione = motivazionePrenotazione;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 

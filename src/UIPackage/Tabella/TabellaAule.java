@@ -18,9 +18,11 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
     public JTable table;
+    private LocalDate currentDate;
     private ArrayList<Prenotazione> prenotazioni;
 
     public TabellaAule(ArrayList<Prenotazione> prenotazioni) {
@@ -36,6 +38,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
 
     public void setupTable(){
         table = new JTable(new TableModel());
+        setCurrentDate(LocalDate.now());
 
         //Imposto l'altezza delle righe
         table.setRowHeight(25);
@@ -54,7 +57,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 int column = table.getSelectedColumn();
 
                 if(column > 0){
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this);
+                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate);
                     nuovaPrenotazione.setVisible(true);
                 }
             }
@@ -82,6 +85,12 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
         //Carico le prenotazioni (dall'inizio) e aggiungo la tabella al panel
         aggiornaPrenotazioni(0);
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void changeCurrentDate(LocalDate newDate){
+        setCurrentDate(newDate);
+        clearTable();
+        aggiornaPrenotazioni(0);
     }
 
     public void salvaPrenotazioni(){
@@ -161,21 +170,21 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
         for(int i = start; i < prenotazioni.size(); i++){
             Prenotazione prenotazione = prenotazioni.get(i);
 
-            int oraInizio = prenotazione.getOraInizio();
-            int oraFine = prenotazione.getOraFine();
+            if(prenotazione.getData().isEqual(getCurrentDate())){
+                int oraInizio = prenotazione.getOraInizio();
+                int oraFine = prenotazione.getOraFine();
 
-            for(int j = oraInizio; j < oraFine; j++){
-                table.setValueAt(prenotazione.getNomePrenotante(), j, prenotazione.getAula().getNumeroAula());
+                for(int j = oraInizio; j < oraFine; j++){
+                    table.setValueAt(prenotazione.getNomePrenotante(), j, prenotazione.getAula().getNumeroAula());
+                }
             }
         }
     }
 
     private void clearTable() {
-        AbstractTableModel model = (AbstractTableModel) table.getModel();
-
-        for (int row = 0; row < model.getRowCount(); row++) {
-            for (int col = 1; col < model.getColumnCount(); col++) {
-                model.setValueAt(null, row, col);
+        for (int row = 0; row < table.getRowCount(); row++) {
+            for (int col = 1; col < table.getColumnCount(); col++) {
+                table.setValueAt(null, row, col);
             }
         }
     }
@@ -186,5 +195,13 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
 
         prenotazioni.add(prenotazione);
         aggiornaPrenotazioni(nextStart);
+    }
+
+    public LocalDate getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(LocalDate currentDate) {
+        this.currentDate = currentDate;
     }
 }
