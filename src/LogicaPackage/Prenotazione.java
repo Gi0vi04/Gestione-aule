@@ -63,10 +63,7 @@ public class Prenotazione implements Serializable {
 
     @Override
     public String toString(){
-        return "Nome prenotante: " + getNomePrenotante() +
-                "\nData: " + getData().toString() +
-                "\nOra inizio: " + getOraInizio() + " Ora fine: " + getOraFine() +
-                "\nMotivazione: " + getMotivazionePrenotazione();
+        return getNomePrenotante() + " - " + getMotivazionePrenotazione();
     }
 
     public Aula getAula() {

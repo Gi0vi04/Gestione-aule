@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
-
         // Creazione del frame principale
         JFrame mainFrame = new JFrame("Gestione aule");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,7 +18,7 @@ public class Main {
         mainFrame.setMinimumSize(new Dimension(700,610));
 
         // Creazione della tabella all'interno di uno JScrollPane
-        TabellaAule tabellaAule = new TabellaAule(prenotazioni);
+        TabellaAule tabellaAule = new TabellaAule();
         //Creazione delle informazioni laterali
         Intestazione intestazione = new Intestazione(tabellaAule);
 

@@ -16,15 +16,14 @@ public class Intestazione extends JPanel {
 
     public Intestazione(TabellaAule tabellaAule){
         this.tabellaAule = tabellaAule;
-
         setLayout(new BorderLayout());
-        setBackground(Color.DARK_GRAY);
+        setBackground(Color.LIGHT_GRAY);
         setBorder(new EmptyBorder(5,5,5,5));
 
         //Sezione modifica data
         JPanel datePanel = new JPanel();
         datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.X_AXIS));
-        datePanel.setBackground(Color.DARK_GRAY);
+        datePanel.setBackground(Color.LIGHT_GRAY);
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
@@ -39,20 +38,20 @@ public class Intestazione extends JPanel {
         dateSpinner.addChangeListener(e -> {
             Date dateSelected = (Date) dateSpinner.getValue();
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            tabellaAule.changeCurrentDate(localDateSelected);
+            tabellaAule.setCurrentDate(localDateSelected);
         });
 
         JLabel dataVisualizzataLabel = new JLabel("Data visualizzata: ");
-        dataVisualizzataLabel.setForeground(Color.WHITE);
         datePanel.add(dataVisualizzataLabel);
         datePanel.add(dateSpinner);
 
         //Sezione CTA
         JPanel ctaPanel = new JPanel();
-        ctaPanel.setBackground(Color.DARK_GRAY);
+        ctaPanel.setBackground(Color.LIGHT_GRAY);
         JButton saveButton = new JButton("Salva");
-        saveButton.addActionListener(e -> tabellaAule.salvaPrenotazioni());
         JButton loadButton = new JButton("Carica");
+
+        saveButton.addActionListener(e -> tabellaAule.salvaPrenotazioni());
         loadButton.addActionListener(e -> tabellaAule.caricaPrenotazioni());
 
         ctaPanel.add(saveButton);

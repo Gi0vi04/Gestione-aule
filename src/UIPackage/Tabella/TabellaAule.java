@@ -1,14 +1,13 @@
 package UIPackage.Tabella;
 
 import LogicaPackage.Prenotazione;
+import LogicaPackage.Utils.CustomFileChooser;
 import LogicaPackage.Utils.Dialog;
 import UIPackage.Tabella.NuovaPrenotazione.NuovaPrenotazione;
-import UIPackage.Tabella.NuovaPrenotazione.NuovaPrenotazioneListener;
+import UIPackage.Tabella.NuovaPrenotazione.PrenotazioneListener;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -16,39 +15,38 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
+public class TabellaAule extends JPanel implements PrenotazioneListener {
     public JTable table;
     private LocalDate currentDate;
     private ArrayList<Prenotazione> prenotazioni;
 
-    public TabellaAule(ArrayList<Prenotazione> prenotazioni) {
+    public TabellaAule() {
         setLayout(new BorderLayout());
+        this.prenotazioni = new ArrayList<>();
+        this.currentDate = LocalDate.now();
 
-        this.prenotazioni = prenotazioni;
-        setupTable();
-    }
-
-    public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
-        this.prenotazioni = prenotazioni;
-    }
-
-    public void setupTable(){
+        // Imposto la tabella
         table = new JTable(new TableModel());
-        setCurrentDate(LocalDate.now());
-
-        //Imposto l'altezza delle righe
+        // Applicazione del renderer personalizzato a tutte le colonne
+        table.setShowGrid(false);
+        CellRenderer cellRenderer = new CellRenderer();
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+        }
+        // Imposto la dimensione della colonna 0
+        table.getColumnModel().getColumn(0).setMinWidth(100);
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table.getColumnModel().getColumn(0).setMaxWidth(100);
+        // Imposto l'altezza delle righe
         table.setRowHeight(25);
         table.setAlignmentX(CENTER_ALIGNMENT);
         table.setFillsViewportHeight(true);
         table.setRowSelectionAllowed(false);
-        table.setColumnSelectionAllowed(true);
+        table.setCellSelectionEnabled(true);
         // Configura il ridimensionamento delle colonne
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
         // Aggiungo un listener per aprire un frame al clic su una cella
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -62,7 +60,6 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 }
             }
         });
-
         // Aggiungo un ComponentListener alla tabella per gestire il ridimensionamento
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -80,43 +77,27 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
             }
         });
 
-        // Aggiungo la tabella in uno JScrollPane e lo posiziono al centro del panel
         JScrollPane scrollPane = new JScrollPane(table);
-        //Carico le prenotazioni (dall'inizio) e aggiungo la tabella al panel
-        aggiornaPrenotazioni(0);
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void changeCurrentDate(LocalDate newDate){
-        setCurrentDate(newDate);
+    public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
+        this.prenotazioni = prenotazioni;
+    }
+
+    public void setCurrentDate(LocalDate currentDate) {
+        this.currentDate = currentDate;
+
         clearTable();
-        aggiornaPrenotazioni(0);
+        refreshTable(0);
+    }
+
+    public LocalDate getCurrentDate(){
+        return currentDate;
     }
 
     public void salvaPrenotazioni(){
-        // Crea un JFileChooser
-        JFileChooser fileChooser = new JFileChooser(){
-            @Override
-            public void approveSelection(){
-                File file = getSelectedFile();
-                if(file.exists() && getDialogType() == SAVE_DIALOG){
-                    int result = JOptionPane.showConfirmDialog(this,"Il file esiste giá, vuoi sovrascriverlo?","File giá esistente",JOptionPane.YES_NO_CANCEL_OPTION);
-                    switch(result){
-                        case JOptionPane.YES_OPTION:
-                            super.approveSelection();
-                            return;
-                        case JOptionPane.NO_OPTION:
-                            return;
-                        case JOptionPane.CLOSED_OPTION:
-                            return;
-                        case JOptionPane.CANCEL_OPTION:
-                            cancelSelection();
-                            return;
-                    }
-                }
-                super.approveSelection();
-            }
-        };
+        CustomFileChooser fileChooser = new CustomFileChooser();
         fileChooser.setDialogTitle("Salva le prenotazioni");
 
         // Imposta un filtro per i file con estensione ".prenotazioni"
@@ -133,21 +114,17 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 else fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile());
 
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
                 for (Prenotazione prenotazione : prenotazioni) objectOutputStream.writeObject(prenotazione);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                new Dialog("Salvataggio avvenuto con successo");
             }
+            catch (IOException e) { new Dialog("Errore durante il salvataggio"); }
+            finally { new Dialog("Salvataggio avvenuto con successo"); }
         } else {
             System.out.println("Operazione annullata dall'utente.");
         }
     }
 
     public void caricaPrenotazioni(){
-        // Crea un JFileChooser
-        JFileChooser fileChooser = new JFileChooser();
+        CustomFileChooser fileChooser = new CustomFileChooser();
         fileChooser.setDialogTitle("Carica le prenotazioni");
 
         // Imposta un filtro per i file con estensione ".prenotazioni"
@@ -159,7 +136,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
             File fileToLoad = fileChooser.getSelectedFile();
 
             if(!fileToLoad.getName().endsWith(".prenotazioni")){
-                new Dialog("Il file non è del formato giusto");
+                new Dialog("Il file non è del formato giusto.");
                 return;
             }
 
@@ -173,23 +150,22 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                     try {
                         Prenotazione prenotazione = (Prenotazione) objectInputStream.readObject();
                         prenotazioniCaricate.add(prenotazione);
-                    } catch (EOFException e) {
-                        break; //Fine del file
                     }
+                    catch (EOFException e) { break; }
                 }
-            } catch (ClassNotFoundException | IOException e) {
-                throw new RuntimeException(e);
-            } finally {
+            }
+            catch (ClassNotFoundException | IOException e) { new Dialog("Errore durante il caricamento delle prenotazioni."); }
+            finally {
                 setPrenotazioni(prenotazioniCaricate);
                 clearTable();
-                aggiornaPrenotazioni(0);
+                refreshTable(0);
             }
         } else {
             System.out.println("Operazione annullata dall'utente.");
         }
     }
 
-    private void aggiornaPrenotazioni(int start){
+    private void refreshTable(int start){
         for(int i = start; i < prenotazioni.size(); i++){
             Prenotazione prenotazione = prenotazioni.get(i);
 
@@ -198,7 +174,7 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
                 int oraFine = prenotazione.getOraFine();
 
                 for(int j = oraInizio; j < oraFine; j++){
-                    table.setValueAt(prenotazione.getNomePrenotante(), j, prenotazione.getAula().getNumeroAula());
+                    table.setValueAt(prenotazione, j, prenotazione.getAula().getNumeroAula());
                 }
             }
         }
@@ -213,18 +189,10 @@ public class TabellaAule extends JPanel implements NuovaPrenotazioneListener {
     }
 
     @Override
-    public void onPrenotazioneAggiunta(Prenotazione prenotazione) {
+    public void addPrenotazione(Prenotazione prenotazione) {
         int nextStart = prenotazioni.size();
 
         prenotazioni.add(prenotazione);
-        aggiornaPrenotazioni(nextStart);
-    }
-
-    public LocalDate getCurrentDate() {
-        return currentDate;
-    }
-
-    public void setCurrentDate(LocalDate currentDate) {
-        this.currentDate = currentDate;
+        refreshTable(nextStart);
     }
 }

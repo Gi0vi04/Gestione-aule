@@ -8,15 +8,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-public class NuovaPrenotazione extends JFrame implements ActionListener {
+public class NuovaPrenotazione extends JFrame {
     private final JTextField nomeTextField;
     private final JComboBox<Aula> aulaComboBox;
     private final JComboBox<String> motivazioneComboBox;
@@ -25,7 +23,7 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
     private final JComboBox<String> oraFineCombo;
     private final JButton buttonConferma;
 
-    public NuovaPrenotazione(int row, int column, NuovaPrenotazioneListener nuovaPrenotazioneListener, LocalDate currentDate){
+    public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate){
         super("Nuova prenotazione");
         setResizable(false);
 
@@ -102,12 +100,12 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         JPanel panelCTA = new JPanel(new BorderLayout());
         buttonConferma = new JButton("Conferma");
         JButton buttonAnnulla = new JButton("Annulla");
-        buttonAnnulla.addActionListener(this);
+        buttonAnnulla.addActionListener(e -> dispose());
 
         buttonConferma.setEnabled(false);
-        buttonConferma.addActionListener(e -> creaNuovaPrenotazione(nuovaPrenotazioneListener));
+        buttonConferma.addActionListener(e -> addPrenotazione(prenotazioneListener));
         panelCTA.add(buttonAnnulla, BorderLayout.WEST);
-        panelCTA.add(buttonConferma, BorderLayout.CENTER);
+        panelCTA.add(buttonConferma, BorderLayout.EAST);
 
         //Inserisco tutto nel pannello principale e infine al frame
         mainPanel.add(nomePanel);
@@ -124,7 +122,7 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         super.setLocationRelativeTo(null);
     }
 
-    private void creaNuovaPrenotazione(NuovaPrenotazioneListener nuovaPrenotazioneListener) {
+    private void addPrenotazione(PrenotazioneListener prenotazioneListener) {
         Date dateSelected = (Date) dateSpinner.getValue();
         LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -134,7 +132,8 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
                 oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex() + 1,
                 nomeTextField.getText(),
                 (String) motivazioneComboBox.getSelectedItem());
-        nuovaPrenotazioneListener.onPrenotazioneAggiunta(prenotazione);
+        prenotazioneListener.addPrenotazione(prenotazione);
+
         dispose();
     }
 
@@ -147,18 +146,8 @@ public class NuovaPrenotazione extends JFrame implements ActionListener {
         oraFineCombo.setSelectedIndex(0);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        dispose();
-    }
-
-    public void checkValidity(){
-        boolean validity = true;
-
-        //Controllo che il nome sia inserito
-        if (nomeTextField.getText().isEmpty())
-            validity = false;
-
+    private void checkValidity(){
+        boolean validity = !nomeTextField.getText().isEmpty();
         buttonConferma.setEnabled(validity);
     }
 }

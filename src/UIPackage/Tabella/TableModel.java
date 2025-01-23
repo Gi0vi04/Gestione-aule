@@ -2,6 +2,7 @@ package UIPackage.Tabella;
 
 
 import LogicaPackage.Aula;
+import LogicaPackage.Prenotazione;
 import LogicaPackage.Utils.Costanti;
 
 import javax.swing.table.AbstractTableModel;
@@ -18,7 +19,7 @@ public class TableModel extends AbstractTableModel {
             columnNames[i + 1] = Costanti.AULE[i].getNomeAula();
         }
 
-        data = new String[10][columnNames.length];
+        data = new Object[10][columnNames.length];
         for(int i = 0; i < 10; i++){
             data[i][0] = Costanti.ORARI_AMMESSI[i] + " - " + Costanti.ORARI_AMMESSI[i + 1];
         }
