@@ -3,25 +3,28 @@ package UIPackage.Tabella.NuovaPrenotazione;
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
 import LogicaPackage.Utils.Costanti;
+import LogicaPackage.Utils.SimpleDocumentListener;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class NuovaPrenotazione extends JFrame {
-    private final JTextField nomeTextField;
-    private final JComboBox<Aula> aulaComboBox;
-    private final JComboBox<String> motivazioneComboBox;
-    private final JSpinner dateSpinner;
-    private final JComboBox<String> oraInizioCombo;
-    private final JComboBox<String> oraFineCombo;
-    private final JButton buttonConferma;
+    private JTextField nomeTextField;
+    private JComboBox<String> tipologiaComboBox;
+    private JComboBox<Aula> aulaComboBox;
+    private JComboBox<String> motivazioneComboBox;
+    private JSpinner dateSpinner;
+    private JComboBox<String> oraInizioCombo;
+    private JComboBox<String> oraFineCombo;
+    private JButton buttonConferma;
+
+    public static final String AULA_DIDATTICA = "Aula didattica";
+    public static final String LABORATORIO = "Laboratorio";
 
     public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate){
         super("Nuova prenotazione");
@@ -31,50 +34,68 @@ public class NuovaPrenotazione extends JFrame {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(new EmptyBorder(10,10,10,10));
 
-        // Sezione inserimento "Nome prenotante"
-        JPanel nomePanel = new JPanel();
-        nomePanel.setLayout(new BoxLayout(nomePanel, BoxLayout.X_AXIS));
-        nomeTextField = new JTextField(20);
-        nomeTextField.setFont(new Font("Dialog", Font.BOLD, 12));
-        nomeTextField.setMargin(new Insets(2,2,2,2));
+        mainPanel.add(createNomePanel());
+        mainPanel.add(createAulaPanel(Costanti.AULE[column - 1]));
+        mainPanel.add(createMotivazionePanel());
+        mainPanel.add(Box.createVerticalStrut(15));
+        mainPanel.add(createDateSpinner(currentDate));
+        mainPanel.add(createOrarioPanel(row));
+        mainPanel.add(Box.createVerticalStrut(15));
+        mainPanel.add(createCTAPanel(prenotazioneListener));
 
-        nomeTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                checkValidity();
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                checkValidity();
-            }
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                checkValidity();
-            }
+        filterAule("Aula didattica"); //Da rendere dinamico
+
+        add(mainPanel);
+        pack();
+        super.setLocationRelativeTo(null);
+    }
+
+    private JPanel createCTAPanel(PrenotazioneListener prenotazioneListener) {
+        JPanel ctaPanel = new JPanel(new BorderLayout());
+        buttonConferma = new JButton("Conferma");
+        JButton buttonAnnulla = new JButton("Annulla");
+        buttonAnnulla.addActionListener(e -> dispose());
+
+        buttonConferma.setEnabled(false);
+        buttonConferma.addActionListener(e -> {
+            Date dateSelected = (Date) dateSpinner.getValue();
+            LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalTime startTime = LocalTime.parse((String) oraInizioCombo.getSelectedItem());
+            LocalTime endTime = LocalTime.parse((String) oraFineCombo.getSelectedItem());
+
+            Prenotazione prenotazione = new Prenotazione((Aula) aulaComboBox.getSelectedItem(),
+                    localDateSelected,
+                    startTime,
+                    endTime,
+                    nomeTextField.getText(),
+                    (String) motivazioneComboBox.getSelectedItem());
+            prenotazioneListener.addPrenotazione(prenotazione);
+
+            dispose();
         });
+        ctaPanel.add(buttonAnnulla, BorderLayout.WEST);
+        ctaPanel.add(buttonConferma, BorderLayout.EAST);
 
-        nomePanel.add(new JLabel("Nome*"));
-        nomePanel.add(Box.createHorizontalStrut(10));
-        nomePanel.add(nomeTextField);
+        return ctaPanel;
+    }
 
-        // Sezione selezione "Aula"
-        JPanel selezioneAulaPanel = new JPanel(new BorderLayout());
-        aulaComboBox = new JComboBox<>(Costanti.AULE);
+    private JPanel createOrarioPanel(int indexStart) {
+        JPanel orarioPanel = new JPanel();
+        orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
+        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(Costanti.ORARI_AMMESSI, 0, Costanti.ORARI_AMMESSI.length - 1));
+        oraFineCombo = new JComboBox<>(Costanti.ORARI_AMMESSI);
 
-        aulaComboBox.setSelectedIndex(column - 1);
+        oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
+        oraInizioCombo.setSelectedIndex(indexStart);
 
-        selezioneAulaPanel.add(aulaComboBox, BorderLayout.CENTER);
+        orarioPanel.add(oraInizioCombo);
+        orarioPanel.add(oraFineCombo);
 
-        // Sezione inserimento "Motivazione"
-        JPanel motivazionePanel = new JPanel();
-        motivazionePanel.setLayout(new BoxLayout(motivazionePanel, BoxLayout.X_AXIS));
-        motivazioneComboBox = new JComboBox<>(Costanti.MOTIVAZIONI);
+        return orarioPanel;
+    }
 
-        motivazionePanel.add(motivazioneComboBox);
-
-        // Sezione inserimento "Data"
+    private JSpinner createDateSpinner(LocalDate currentDate) {
         Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         Date startDate = calendar.getTime();
         calendar.add(Calendar.YEAR, 1);
@@ -84,70 +105,76 @@ public class NuovaPrenotazione extends JFrame {
         JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy");
         dateSpinner.setEditor(dateEditor);
 
-        // Sezione inserimento "Orario"
-        JPanel orarioPanel = new JPanel();
-        orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
-        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(Costanti.ORARI_AMMESSI, 0, Costanti.ORARI_AMMESSI.length - 1));
-        oraFineCombo = new JComboBox<>(Costanti.ORARI_AMMESSI);
-
-        oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
-        oraInizioCombo.setSelectedIndex(row);
-
-        orarioPanel.add(oraInizioCombo);
-        orarioPanel.add(oraFineCombo);
-
-        //Sezione CTA
-        JPanel panelCTA = new JPanel(new BorderLayout());
-        buttonConferma = new JButton("Conferma");
-        JButton buttonAnnulla = new JButton("Annulla");
-        buttonAnnulla.addActionListener(e -> dispose());
-
-        buttonConferma.setEnabled(false);
-        buttonConferma.addActionListener(e -> addPrenotazione(prenotazioneListener));
-        panelCTA.add(buttonAnnulla, BorderLayout.WEST);
-        panelCTA.add(buttonConferma, BorderLayout.EAST);
-
-        //Inserisco tutto nel pannello principale e infine al frame
-        mainPanel.add(nomePanel);
-        mainPanel.add(selezioneAulaPanel);
-        mainPanel.add(motivazionePanel);
-        mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(dateSpinner);
-        mainPanel.add(orarioPanel);
-        mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(panelCTA);
-
-        add(mainPanel);
-        pack();
-        super.setLocationRelativeTo(null);
+        return dateSpinner;
     }
 
-    private void addPrenotazione(PrenotazioneListener prenotazioneListener) {
-        Date dateSelected = (Date) dateSpinner.getValue();
-        LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    private JPanel createMotivazionePanel() {
+        JPanel motivazionePanel = new JPanel();
+        motivazionePanel.setLayout(new BoxLayout(motivazionePanel, BoxLayout.X_AXIS));
+        motivazioneComboBox = new JComboBox<>(Costanti.MOTIVAZIONI);
 
-        Prenotazione prenotazione = new Prenotazione((Aula) aulaComboBox.getSelectedItem(),
-                localDateSelected,
-                oraInizioCombo.getSelectedIndex(),
-                oraInizioCombo.getSelectedIndex() + oraFineCombo.getSelectedIndex() + 1,
-                nomeTextField.getText(),
-                (String) motivazioneComboBox.getSelectedItem());
-        prenotazioneListener.addPrenotazione(prenotazione);
+        motivazionePanel.add(motivazioneComboBox);
 
-        dispose();
+        return motivazionePanel;
+    }
+
+    private JPanel createAulaPanel(Aula aula) {
+        JPanel aulaPanel = new JPanel();
+        aulaPanel.setLayout(new BoxLayout(aulaPanel, BoxLayout.X_AXIS));
+        tipologiaComboBox = new JComboBox<>(new String[]{AULA_DIDATTICA, LABORATORIO});
+        aulaComboBox = new JComboBox<>();
+
+        tipologiaComboBox.addActionListener(e -> filterAule((String) tipologiaComboBox.getSelectedItem()));
+
+        tipologiaComboBox.setSelectedIndex(aula.getTipologia().equals(AULA_DIDATTICA) ? 0 : 1);
+        aulaComboBox.setSelectedIndex(aula.getNumeroAula());
+
+        aulaPanel.add(tipologiaComboBox);
+        aulaPanel.add(aulaComboBox);
+
+        return aulaPanel;
+    }
+
+    private JPanel createNomePanel(){
+        JPanel nomePanel = new JPanel();
+        nomePanel.setLayout(new BoxLayout(nomePanel, BoxLayout.X_AXIS));
+        nomeTextField = new JTextField(20);
+        nomeTextField.setFont(new Font("Dialog", Font.BOLD, 12));
+        nomeTextField.setMargin(new Insets(2,2,2,2));
+
+        nomeTextField.getDocument().addDocumentListener((SimpleDocumentListener) e -> checkValidity());
+
+        nomePanel.add(new JLabel("Nome*"));
+        nomePanel.add(Box.createHorizontalStrut(10));
+        nomePanel.add(nomeTextField);
+
+        return nomePanel;
+    }
+
+    private void filterAule(String tipologia) {
+        aulaComboBox.removeAllItems();
+        for(int i = 0; i < Costanti.AULE.length; i++){
+            if(Costanti.AULE[i].getTipologia().equals(tipologia)) aulaComboBox.addItem(Costanti.AULE[i]);
+        }
+
+        aggiornaOrarioFineAmmesso();
     }
 
     private void aggiornaOrarioFineAmmesso(){
-        int oraInizioSelezionato = oraInizioCombo.getSelectedIndex();
-
-        oraFineCombo.removeAllItems();
-        for(int i = oraInizioSelezionato + 1; i < Costanti.ORARI_AMMESSI.length; i++) oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
-
-        oraFineCombo.setSelectedIndex(0);
+//        int oraInizioSelezionato = oraInizioCombo.getSelectedIndex();
+//        int step = tipologiaComboBox.getSelectedItem() == AULA_DIDATTICA ? 1 : 2;
+//
+//        oraFineCombo.removeAllItems();
+//        for(int i = oraInizioSelezionato + step; i < Costanti.ORARI_AMMESSI.length; i += step){
+//            oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
+//        }
+//
+//        oraFineCombo.setSelectedIndex(0);
     }
 
     private void checkValidity(){
-        boolean validity = !nomeTextField.getText().isEmpty();
-        buttonConferma.setEnabled(validity);
+        String nome = nomeTextField.getText().trim();
+        boolean isValid = !nome.isEmpty() && nome.matches("[a-zA-Z\\s]+");
+        buttonConferma.setEnabled(isValid);
     }
 }

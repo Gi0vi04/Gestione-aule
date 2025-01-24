@@ -2,17 +2,18 @@ package LogicaPackage;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 public class Prenotazione implements Serializable {
     private Aula aula;
     private LocalDate data;
-    private int oraInizio;
-    private int oraFine;
+    private LocalTime oraInizio;
+    private LocalTime oraFine;
     private String nomePrenotante;
     private String motivazionePrenotazione;
 
-    public Prenotazione(Aula aula, LocalDate data, int oraInizio, int oraFine, String nomePrenotante, String motivazionePrenotazione){
+    public Prenotazione(Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nomePrenotante, String motivazionePrenotazione){
         this.aula = aula;
         this.data = data;
         this.oraInizio = oraInizio;
@@ -29,19 +30,19 @@ public class Prenotazione implements Serializable {
         this.data = data;
     }
 
-    public int getOraInizio() {
+    public LocalTime getOraInizio() {
         return oraInizio;
     }
 
-    public void setOraInizio(int oraInizio) {
+    public void setOraInizio(LocalTime oraInizio) {
         this.oraInizio = oraInizio;
     }
 
-    public int getOraFine() {
+    public LocalTime getOraFine() {
         return oraFine;
     }
 
-    public void setOraFine(int oraFine) {
+    public void setOraFine(LocalTime oraFine) {
         this.oraFine = oraFine;
     }
 

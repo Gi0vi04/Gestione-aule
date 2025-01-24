@@ -1,6 +1,7 @@
 package UIPackage.Tabella;
 
 import LogicaPackage.Prenotazione;
+import LogicaPackage.Utils.Costanti;
 import LogicaPackage.Utils.CustomFileChooser;
 import LogicaPackage.Utils.Dialog;
 import UIPackage.Tabella.NuovaPrenotazione.NuovaPrenotazione;
@@ -14,8 +15,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TabellaAule extends JPanel implements PrenotazioneListener {
     public JTable table;
@@ -54,7 +58,7 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
                 int row = table.getSelectedRow();
                 int column = table.getSelectedColumn();
 
-                if(column > 0){
+                if(column > 0 && !currentDate.isBefore(LocalDate.now())){
                     NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate);
                     nuovaPrenotazione.setVisible(true);
                 }
@@ -166,14 +170,20 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
     }
 
     private void refreshTable(int start){
+        LocalTime referenceTime = LocalTime.parse("08:00");
+
         for(int i = start; i < prenotazioni.size(); i++){
             Prenotazione prenotazione = prenotazioni.get(i);
 
             if(prenotazione.getData().isEqual(getCurrentDate())){
-                int oraInizio = prenotazione.getOraInizio();
-                int oraFine = prenotazione.getOraFine();
+                // Calcolo la riga di inizio e di fine
+                LocalTime startTime = prenotazione.getOraInizio();
+                LocalTime endTime = prenotazione.getOraFine();
 
-                for(int j = oraInizio; j < oraFine; j++){
+                int difference = endTime.getHour() - startTime.getHour();
+                int startRow = startTime.getHour() - referenceTime.getHour();
+
+                for(int j = startRow; j < startRow + difference; j++){
                     table.setValueAt(prenotazione, j, prenotazione.getAula().getNumeroAula());
                 }
             }

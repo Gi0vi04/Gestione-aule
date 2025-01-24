@@ -1,12 +1,10 @@
 package MainPackage;
 
-import LogicaPackage.Prenotazione;
 import UIPackage.InformazioniLaterali.Intestazione;
 import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
