@@ -15,12 +15,12 @@ public final class Costanti {
             "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",};
 
     public static final Aula[] AULE = {
-            new AulaDidattica(0, "Aula didattica",100,true,false, "Didattica 1"),
-            new AulaDidattica(1, "Aula didattica",70,false,false, "Didattica 2"),
-            new AulaDidattica(2, "Aula didattica",85,true,false, "Didattica 3"),
-            new AulaDidattica(3, "Aula didattica",100,true,true, "Didattica 4"),
-            new Laboratorio(0, "Aula didattica",100,true,false, "Laboratorio 1"),
-            new Laboratorio(1, "Aula didattica",120,true,true, "Laboratorio 2"),
+            new AulaDidattica(1, 100,true,false, "Didattica 1"),
+            new AulaDidattica(2, 70,false,false, "Didattica 2"),
+            new AulaDidattica(3, 85,true,false, "Didattica 3"),
+            new AulaDidattica(4, 100,true,true, "Didattica 4"),
+            new Laboratorio(5, 100,true,false, "Laboratorio 1"),
+            new Laboratorio(6, 120,true,true, "Laboratorio 2"),
     };
 
     public static final String[] MOTIVAZIONI = {

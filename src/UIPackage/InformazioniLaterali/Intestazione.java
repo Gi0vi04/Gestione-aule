@@ -20,9 +20,15 @@ public class Intestazione extends JPanel {
         setBackground(Color.LIGHT_GRAY);
         setBorder(new EmptyBorder(5,5,5,5));
 
-        //Sezione modifica data
-        JPanel datePanel = new JPanel();
-        datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.X_AXIS));
+        // Sezione stampa
+        JPanel printPanel = new JPanel();
+        printPanel.setBackground(Color.LIGHT_GRAY);
+        JButton printButton = new JButton("Stampa prenotazioni");
+        printButton.addActionListener(e -> tabellaAule.stampaPrenotazioni());
+        printPanel.add(printButton);
+
+        // Sezione modifica data
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         datePanel.setBackground(Color.LIGHT_GRAY);
 
         Calendar calendar = Calendar.getInstance();
@@ -45,7 +51,7 @@ public class Intestazione extends JPanel {
         datePanel.add(dataVisualizzataLabel);
         datePanel.add(dateSpinner);
 
-        //Sezione CTA
+        // Sezione CTA
         JPanel ctaPanel = new JPanel();
         ctaPanel.setBackground(Color.LIGHT_GRAY);
         JButton saveButton = new JButton("Salva");
@@ -57,7 +63,8 @@ public class Intestazione extends JPanel {
         ctaPanel.add(saveButton);
         ctaPanel.add(loadButton);
 
-        add(datePanel, BorderLayout.WEST);
+        add(printPanel, BorderLayout.WEST);
+        add(datePanel, BorderLayout.CENTER);
         add(ctaPanel,BorderLayout.EAST);
     }
 }

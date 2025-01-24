@@ -22,13 +22,8 @@ public class CellRenderer extends DefaultTableCellRenderer {
         setBorder(border);
 
         // Imposto uno sfondo sulla colonna 0
-        switch (column){
-            case 0:
-                cell.setBackground(Color.LIGHT_GRAY);
-                break;
-            default:
-                cell.setBackground(Color.WHITE);
-        }
+        if (column == 0) cell.setBackground(Color.LIGHT_GRAY);
+        else cell.setBackground(Color.WHITE);
 
         // Imposto il colore per la cella selezionata
         if(isSelected){

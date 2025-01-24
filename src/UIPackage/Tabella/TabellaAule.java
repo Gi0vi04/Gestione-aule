@@ -10,16 +10,12 @@ import UIPackage.Tabella.NuovaPrenotazione.PrenotazioneListener;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.awt.print.PrinterException;
 import java.io.*;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TabellaAule extends JPanel implements PrenotazioneListener {
     public JTable table;
@@ -204,5 +200,13 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
 
         prenotazioni.add(prenotazione);
         refreshTable(nextStart);
+    }
+
+    public void stampaPrenotazioni() {
+        try {
+            table.print();
+        } catch (PrinterException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

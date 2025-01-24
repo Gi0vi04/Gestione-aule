@@ -13,9 +13,10 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static java.lang.Math.min;
+
 public class NuovaPrenotazione extends JFrame {
     private JTextField nomeTextField;
-    private JComboBox<String> tipologiaComboBox;
     private JComboBox<Aula> aulaComboBox;
     private JComboBox<String> motivazioneComboBox;
     private JSpinner dateSpinner;
@@ -35,15 +36,13 @@ public class NuovaPrenotazione extends JFrame {
         mainPanel.setBorder(new EmptyBorder(10,10,10,10));
 
         mainPanel.add(createNomePanel());
-        mainPanel.add(createAulaPanel(Costanti.AULE[column - 1]));
+        mainPanel.add(createAulaPanel(column - 1));
         mainPanel.add(createMotivazionePanel());
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(createDateSpinner(currentDate));
         mainPanel.add(createOrarioPanel(row));
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(createCTAPanel(prenotazioneListener));
-
-        filterAule("Aula didattica"); //Da rendere dinamico
 
         add(mainPanel);
         pack();
@@ -118,19 +117,12 @@ public class NuovaPrenotazione extends JFrame {
         return motivazionePanel;
     }
 
-    private JPanel createAulaPanel(Aula aula) {
-        JPanel aulaPanel = new JPanel();
-        aulaPanel.setLayout(new BoxLayout(aulaPanel, BoxLayout.X_AXIS));
-        tipologiaComboBox = new JComboBox<>(new String[]{AULA_DIDATTICA, LABORATORIO});
-        aulaComboBox = new JComboBox<>();
+    private JPanel createAulaPanel(int indexAula) {
+        JPanel aulaPanel = new JPanel(new BorderLayout());
+        aulaComboBox = new JComboBox<>(Costanti.AULE);
+        aulaComboBox.setSelectedIndex(indexAula);
 
-        tipologiaComboBox.addActionListener(e -> filterAule((String) tipologiaComboBox.getSelectedItem()));
-
-        tipologiaComboBox.setSelectedIndex(aula.getTipologia().equals(AULA_DIDATTICA) ? 0 : 1);
-        aulaComboBox.setSelectedIndex(aula.getNumeroAula());
-
-        aulaPanel.add(tipologiaComboBox);
-        aulaPanel.add(aulaComboBox);
+        aulaPanel.add(aulaComboBox, BorderLayout.CENTER);
 
         return aulaPanel;
     }
@@ -151,25 +143,21 @@ public class NuovaPrenotazione extends JFrame {
         return nomePanel;
     }
 
-    private void filterAule(String tipologia) {
-        aulaComboBox.removeAllItems();
-        for(int i = 0; i < Costanti.AULE.length; i++){
-            if(Costanti.AULE[i].getTipologia().equals(tipologia)) aulaComboBox.addItem(Costanti.AULE[i]);
+    private void aggiornaOrarioFineAmmesso(){
+        Aula aulaSelezinata = (Aula) aulaComboBox.getSelectedItem();
+        boolean isAulaDidattica = aulaSelezinata.getTipologia().equals("Aula didattica");
+
+        int orarioInizio = oraInizioCombo.getSelectedIndex();
+        String orarioFine = (String) oraFineCombo.getSelectedItem();
+        int step = isAulaDidattica ? 1 : 2;
+        int max = isAulaDidattica ? 8 : 4;
+
+        oraFineCombo.removeAllItems();
+        for(int i = orarioInizio + step; i < min(Costanti.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
+            oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
         }
 
-        aggiornaOrarioFineAmmesso();
-    }
-
-    private void aggiornaOrarioFineAmmesso(){
-//        int oraInizioSelezionato = oraInizioCombo.getSelectedIndex();
-//        int step = tipologiaComboBox.getSelectedItem() == AULA_DIDATTICA ? 1 : 2;
-//
-//        oraFineCombo.removeAllItems();
-//        for(int i = oraInizioSelezionato + step; i < Costanti.ORARI_AMMESSI.length; i += step){
-//            oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
-//        }
-//
-//        oraFineCombo.setSelectedIndex(0);
+        oraFineCombo.setSelectedIndex(0);
     }
 
     private void checkValidity(){
