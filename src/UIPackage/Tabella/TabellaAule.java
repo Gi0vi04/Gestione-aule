@@ -1,11 +1,12 @@
 package UIPackage.Tabella;
 
+import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
-import LogicaPackage.Utils.Costanti;
 import LogicaPackage.Utils.CustomFileChooser;
 import LogicaPackage.Utils.Dialog;
-import UIPackage.Tabella.NuovaPrenotazione.NuovaPrenotazione;
-import UIPackage.Tabella.NuovaPrenotazione.PrenotazioneListener;
+import UIPackage.Tabella.GestionePrenotazione.ModificaPrenotazione;
+import UIPackage.Tabella.GestionePrenotazione.NuovaPrenotazione;
+import UIPackage.Tabella.GestionePrenotazione.PrenotazioneListener;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -54,9 +55,16 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
                 int row = table.getSelectedRow();
                 int column = table.getSelectedColumn();
 
-                if(column > 0 && !currentDate.isBefore(LocalDate.now())){
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate);
+                if(column == 0 || currentDate.isBefore(LocalDate.now())) return;
+
+                Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
+                if(prenotazione == null){
+                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate, prenotazioni);
                     nuovaPrenotazione.setVisible(true);
+                }
+                else{
+                    ModificaPrenotazione modificaPrenotazione = new ModificaPrenotazione(prenotazione, TabellaAule.this);
+                    modificaPrenotazione.setVisible(true);
                 }
             }
         });
@@ -194,6 +202,14 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         }
     }
 
+    public void stampaPrenotazioni() {
+        try {
+            table.print();
+        } catch (PrinterException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public void addPrenotazione(Prenotazione prenotazione) {
         int nextStart = prenotazioni.size();
@@ -202,11 +218,17 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         refreshTable(nextStart);
     }
 
-    public void stampaPrenotazioni() {
-        try {
-            table.print();
-        } catch (PrinterException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public void editPrenotazione(Prenotazione prenotazione) {
+        prenotazioni.set(prenotazione.getCodicePrenotazione(), prenotazione);
+        clearTable();
+        refreshTable(0);
+    }
+
+    @Override
+    public void removePrenotazione(int codicePrenotazione) {
+        prenotazioni.remove(codicePrenotazione);
+        clearTable();
+        refreshTable(0);
     }
 }

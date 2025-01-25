@@ -1,4 +1,4 @@
-package UIPackage.Tabella.NuovaPrenotazione;
+package UIPackage.Tabella.GestionePrenotazione;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
@@ -27,7 +27,7 @@ public class NuovaPrenotazione extends JFrame {
     public static final String AULA_DIDATTICA = "Aula didattica";
     public static final String LABORATORIO = "Laboratorio";
 
-    public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate){
+    public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate, ArrayList<Prenotazione> prenotazioni){
         super("Nuova prenotazione");
         setResizable(false);
 
@@ -42,14 +42,14 @@ public class NuovaPrenotazione extends JFrame {
         mainPanel.add(createDateSpinner(currentDate));
         mainPanel.add(createOrarioPanel(row));
         mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(createCTAPanel(prenotazioneListener));
+        mainPanel.add(createCTAPanel(prenotazioneListener, prenotazioni.size()));
 
         add(mainPanel);
         pack();
         super.setLocationRelativeTo(null);
     }
 
-    private JPanel createCTAPanel(PrenotazioneListener prenotazioneListener) {
+    private JPanel createCTAPanel(PrenotazioneListener prenotazioneListener, int codicePrenotazione) {
         JPanel ctaPanel = new JPanel(new BorderLayout());
         buttonConferma = new JButton("Conferma");
         JButton buttonAnnulla = new JButton("Annulla");
@@ -62,7 +62,9 @@ public class NuovaPrenotazione extends JFrame {
             LocalTime startTime = LocalTime.parse((String) oraInizioCombo.getSelectedItem());
             LocalTime endTime = LocalTime.parse((String) oraFineCombo.getSelectedItem());
 
-            Prenotazione prenotazione = new Prenotazione((Aula) aulaComboBox.getSelectedItem(),
+            Prenotazione prenotazione = new Prenotazione(
+                    codicePrenotazione,
+                    (Aula) aulaComboBox.getSelectedItem(),
                     localDateSelected,
                     startTime,
                     endTime,

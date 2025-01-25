@@ -46,9 +46,6 @@ public class Intestazione extends JPanel {
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             tabellaAule.setCurrentDate(localDateSelected);
         });
-
-        JLabel dataVisualizzataLabel = new JLabel("Data visualizzata: ");
-        datePanel.add(dataVisualizzataLabel);
         datePanel.add(dateSpinner);
 
         // Sezione CTA

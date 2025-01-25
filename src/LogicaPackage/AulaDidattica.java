@@ -12,7 +12,7 @@ public class AulaDidattica extends Aula implements Serializable {
         this.presenzaVideoproiettore = presenzaVideoproiettore;
     }
 
-    public boolean isPresenzaLavagna() {
+    public boolean getPresenzaLavagna() {
         return presenzaLavagna;
     }
 
@@ -20,7 +20,7 @@ public class AulaDidattica extends Aula implements Serializable {
         this.presenzaLavagna = presenzaLavagna;
     }
 
-    public boolean isPresenzaVideoproiettore() {
+    public boolean getPresenzaVideoproiettore() {
         return presenzaVideoproiettore;
     }
 

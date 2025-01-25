@@ -19,16 +19,8 @@ public class Aula implements Serializable {
         return numeroAula;
     }
 
-    public void setNumeroAula(int numeroAula) {
-        this.numeroAula = numeroAula;
-    }
-
     public int getCapienza() {
         return capienza;
-    }
-
-    public void setCapienza(int capienza) {
-        this.capienza = capienza;
     }
 
     public String getNomeAula() {
@@ -39,12 +31,22 @@ public class Aula implements Serializable {
         return tipologia;
     }
 
-    public void setTipologia(String tipologia) {
-        this.tipologia = tipologia;
-    }
-
     @Override
     public String toString(){
         return nomeAula;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Aula aula = (Aula) obj;
+        return nomeAula != null && nomeAula.equals(aula.nomeAula);
+    }
+
+    @Override
+    public int hashCode() {
+        return nomeAula != null ? nomeAula.hashCode() : 0;
+    }
+
 }

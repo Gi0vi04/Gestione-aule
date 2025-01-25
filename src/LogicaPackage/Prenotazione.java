@@ -3,23 +3,24 @@ package LogicaPackage;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 public class Prenotazione implements Serializable {
+    private int codicePrenotazione;
+    private String nome;
+    private String motivazione;
     private Aula aula;
     private LocalDate data;
     private LocalTime oraInizio;
     private LocalTime oraFine;
-    private String nomePrenotante;
-    private String motivazionePrenotazione;
 
-    public Prenotazione(Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nomePrenotante, String motivazionePrenotazione){
+    public Prenotazione(int codicePrenotazione, Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nome, String motivazione){
+        this.codicePrenotazione = codicePrenotazione;
         this.aula = aula;
         this.data = data;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
-        this.nomePrenotante = nomePrenotante;
-        this.motivazionePrenotazione = motivazionePrenotazione;
+        this.nome = nome;
+        this.motivazione = motivazione;
     }
 
     public LocalDate getData() {
@@ -46,25 +47,25 @@ public class Prenotazione implements Serializable {
         this.oraFine = oraFine;
     }
 
-    public String getNomePrenotante() {
-        return nomePrenotante;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomePrenotante(String nomePrenotante) {
-        this.nomePrenotante = nomePrenotante;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getMotivazionePrenotazione() {
-        return motivazionePrenotazione;
+    public String getMotivazione() {
+        return motivazione;
     }
 
-    public void setMotivazionePrenotazione(String motivazionePrenotazione) {
-        this.motivazionePrenotazione = motivazionePrenotazione;
+    public void setMotivazione(String motivazione) {
+        this.motivazione = motivazione;
     }
 
     @Override
     public String toString(){
-        return getNomePrenotante() + " - " + getMotivazionePrenotazione();
+        return getNome() + " - " + getMotivazione();
     }
 
     public Aula getAula() {
@@ -73,5 +74,13 @@ public class Prenotazione implements Serializable {
 
     public void setCodiceAula(Aula aula) {
         this.aula = aula;
+    }
+
+    public int getCodicePrenotazione() {
+        return codicePrenotazione;
+    }
+
+    public void setCodicePrenotazione(int codicePrenotazione) {
+        this.codicePrenotazione = codicePrenotazione;
     }
 }

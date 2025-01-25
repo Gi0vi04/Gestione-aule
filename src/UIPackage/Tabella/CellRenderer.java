@@ -32,7 +32,7 @@ public class CellRenderer extends DefaultTableCellRenderer {
 
         // Imposto il colore personalizzato per motivazione
         if(value instanceof Prenotazione){
-            switch (((Prenotazione) value).getMotivazionePrenotazione()){
+            switch (((Prenotazione) value).getMotivazione()){
                 case "Lezione":
                     cell.setBackground(Color.ORANGE);
                     break;
