@@ -69,7 +69,7 @@ public class ModificaPrenotazione extends JFrame {
                     nomeTextField.getText(),
                     (String) motivazioneComboBox.getSelectedItem());
 
-            prenotazioneListener.editPrenotazione(nuovaPrenotazione);
+            prenotazioneListener.editPrenotazione(prenotazioneIniziale, nuovaPrenotazione);
             dispose();
         });
         ctaPanel.add(buttonElimina, BorderLayout.WEST);

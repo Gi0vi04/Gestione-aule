@@ -218,25 +218,16 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         refreshTable(nextStart);
     }
 
-    private int getIndexPrenotazione(String codicePrenotazione){
-        for(int i = 0; i < prenotazioni.size(); i++){
-            Prenotazione currentPrenotazione = prenotazioni.get(i);
-            if(currentPrenotazione.getCodicePrenotazione().equals(codicePrenotazione)) return i;
-        }
-
-        return -1;
-    }
-
     @Override
-    public void editPrenotazione(Prenotazione prenotazione) {
-        prenotazioni.set(getIndexPrenotazione(prenotazione.getCodicePrenotazione()), prenotazione);
+    public void editPrenotazione(Prenotazione vecchiaPrenotazione, Prenotazione nuovaPrenotazione) {
+        prenotazioni.set(prenotazioni.indexOf(vecchiaPrenotazione), nuovaPrenotazione);
         clearTable();
         refreshTable(0);
     }
 
     @Override
     public void removePrenotazione(Prenotazione prenotazione) {
-        prenotazioni.remove(getIndexPrenotazione(prenotazione.getCodicePrenotazione()));
+        prenotazioni.remove(prenotazione);
         clearTable();
         refreshTable(0);
     }

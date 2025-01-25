@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Prenotazione implements Serializable {
-    private String codicePrenotazione;
     private String nome;
     private String motivazione;
     private Aula aula;
@@ -14,7 +13,6 @@ public class Prenotazione implements Serializable {
     private LocalTime oraFine;
 
     public Prenotazione(Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nome, String motivazione){
-        this.codicePrenotazione = aula.hashCode() + "_" + data.hashCode();
         this.aula = aula;
         this.data = data;
         this.oraInizio = oraInizio;
@@ -40,9 +38,6 @@ public class Prenotazione implements Serializable {
     }
     public Aula getAula() {
         return aula;
-    }
-    public String getCodicePrenotazione() {
-        return codicePrenotazione;
     }
 
     public String generateCodicePrenotazione(Prenotazione prenotazione){
