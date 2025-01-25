@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import static java.lang.Math.min;
+
 public class ModificaPrenotazione extends JFrame {
     private JTextField nomeTextField;
     private JComboBox<Aula> aulaComboBox;
@@ -36,7 +38,7 @@ public class ModificaPrenotazione extends JFrame {
         mainPanel.add(editMotivazionePanel(prenotazione.getMotivazione()));
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(editDateSpinner(prenotazione.getData()));
-        mainPanel.add(editOrarioPanel(prenotazione.getOraInizio()));
+        mainPanel.add(editOrarioPanel(prenotazione.getOraInizio(), prenotazione.getOraFine()));
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(editCTAPanel(prenotazioneListener, prenotazione));
 
@@ -78,14 +80,16 @@ public class ModificaPrenotazione extends JFrame {
         return ctaPanel;
     }
 
-    private JPanel editOrarioPanel(LocalTime oraInizio) {
+    private JPanel editOrarioPanel(LocalTime oraInizio, LocalTime oraFine) {
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
         oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(Costanti.ORARI_AMMESSI, 0, Costanti.ORARI_AMMESSI.length - 1));
         oraFineCombo = new JComboBox<>(Costanti.ORARI_AMMESSI);
 
-//        oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
-//        oraInizioCombo.setSelectedIndex(oraInizio);
+        oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
+
+        oraInizioCombo.setSelectedItem(oraInizio.toString());
+        oraFineCombo.setSelectedItem(oraFine.toString());
 
         orarioPanel.add(oraInizioCombo);
         orarioPanel.add(oraFineCombo);
@@ -141,5 +145,22 @@ public class ModificaPrenotazione extends JFrame {
         nomePanel.add(nomeTextField);
 
         return nomePanel;
+    }
+
+    private void aggiornaOrarioFineAmmesso(){
+        Aula aulaSelezinata = (Aula) aulaComboBox.getSelectedItem();
+        boolean isAulaDidattica = aulaSelezinata.getTipologia().equals("Aula didattica");
+
+        int orarioInizio = oraInizioCombo.getSelectedIndex();
+        String orarioFine = (String) oraFineCombo.getSelectedItem();
+        int step = isAulaDidattica ? 1 : 2;
+        int max = isAulaDidattica ? 8 : 4;
+
+        oraFineCombo.removeAllItems();
+        for(int i = orarioInizio + step; i < min(Costanti.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
+            oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
+        }
+
+        oraFineCombo.setSelectedIndex(0);
     }
 }
