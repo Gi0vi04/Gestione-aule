@@ -63,7 +63,6 @@ public class NuovaPrenotazione extends JFrame {
             LocalTime endTime = LocalTime.parse((String) oraFineCombo.getSelectedItem());
 
             Prenotazione prenotazione = new Prenotazione(
-                    codicePrenotazione,
                     (Aula) aulaComboBox.getSelectedItem(),
                     localDateSelected,
                     startTime,

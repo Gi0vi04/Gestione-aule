@@ -38,20 +38,20 @@ public class ModificaPrenotazione extends JFrame {
         mainPanel.add(editDateSpinner(prenotazione.getData()));
         mainPanel.add(editOrarioPanel(prenotazione.getOraInizio()));
         mainPanel.add(Box.createVerticalStrut(15));
-        mainPanel.add(editCTAPanel(prenotazioneListener, prenotazione.getCodicePrenotazione()));
+        mainPanel.add(editCTAPanel(prenotazioneListener, prenotazione));
 
         add(mainPanel);
         pack();
         super.setLocationRelativeTo(null);
     }
 
-    private JPanel editCTAPanel(PrenotazioneListener prenotazioneListener, int codicePrenotazione) {
+    private JPanel editCTAPanel(PrenotazioneListener prenotazioneListener, Prenotazione prenotazioneIniziale) {
         JPanel ctaPanel = new JPanel(new BorderLayout());
         buttonConferma = new JButton("Conferma");
         JButton buttonElimina = new JButton("Elimina");
         buttonElimina.setForeground(Color.RED);
         buttonElimina.addActionListener(e -> {
-            prenotazioneListener.removePrenotazione(codicePrenotazione);
+            prenotazioneListener.removePrenotazione(prenotazioneIniziale);
             dispose();
         });
 
@@ -61,16 +61,15 @@ public class ModificaPrenotazione extends JFrame {
             LocalTime startTime = LocalTime.parse((String) oraInizioCombo.getSelectedItem());
             LocalTime endTime = LocalTime.parse((String) oraFineCombo.getSelectedItem());
 
-            Prenotazione prenotazione = new Prenotazione(
-                    codicePrenotazione,
+            Prenotazione nuovaPrenotazione = new Prenotazione(
                     (Aula) aulaComboBox.getSelectedItem(),
                     localDateSelected,
                     startTime,
                     endTime,
                     nomeTextField.getText(),
                     (String) motivazioneComboBox.getSelectedItem());
-            prenotazioneListener.editPrenotazione(prenotazione);
 
+            prenotazioneListener.editPrenotazione(nuovaPrenotazione);
             dispose();
         });
         ctaPanel.add(buttonElimina, BorderLayout.WEST);

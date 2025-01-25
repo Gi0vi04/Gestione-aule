@@ -5,5 +5,5 @@ import LogicaPackage.Prenotazione;
 public interface PrenotazioneListener {
     void addPrenotazione(Prenotazione prenotazione);
     void editPrenotazione(Prenotazione prenotazione);
-    void removePrenotazione(int codicePrenotazione);
+    void removePrenotazione(Prenotazione prenotazione);
 }

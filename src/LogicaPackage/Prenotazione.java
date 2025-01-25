@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Prenotazione implements Serializable {
-    private int codicePrenotazione;
+    private String codicePrenotazione;
     private String nome;
     private String motivazione;
     private Aula aula;
@@ -13,8 +13,8 @@ public class Prenotazione implements Serializable {
     private LocalTime oraInizio;
     private LocalTime oraFine;
 
-    public Prenotazione(int codicePrenotazione, Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nome, String motivazione){
-        this.codicePrenotazione = codicePrenotazione;
+    public Prenotazione(Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nome, String motivazione){
+        this.codicePrenotazione = aula.hashCode() + "_" + data.hashCode();
         this.aula = aula;
         this.data = data;
         this.oraInizio = oraInizio;
@@ -26,61 +26,46 @@ public class Prenotazione implements Serializable {
     public LocalDate getData() {
         return data;
     }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
     public LocalTime getOraInizio() {
         return oraInizio;
     }
-
-    public void setOraInizio(LocalTime oraInizio) {
-        this.oraInizio = oraInizio;
-    }
-
     public LocalTime getOraFine() {
         return oraFine;
     }
-
-    public void setOraFine(LocalTime oraFine) {
-        this.oraFine = oraFine;
-    }
-
     public String getNome() {
         return nome;
     }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getMotivazione() {
         return motivazione;
     }
+    public Aula getAula() {
+        return aula;
+    }
+    public String getCodicePrenotazione() {
+        return codicePrenotazione;
+    }
 
-    public void setMotivazione(String motivazione) {
-        this.motivazione = motivazione;
+    public String generateCodicePrenotazione(Prenotazione prenotazione){
+        return prenotazione.getAula().hashCode() + "_" + prenotazione.data.hashCode();
     }
 
     @Override
     public String toString(){
         return getNome() + " - " + getMotivazione();
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true; // Se sono lo stesso oggetto
+        if (obj == null || getClass() != obj.getClass()) return false; // Se l'oggetto è null o di tipo diverso
 
-    public Aula getAula() {
-        return aula;
-    }
+        Prenotazione that = (Prenotazione) obj;
 
-    public void setCodiceAula(Aula aula) {
-        this.aula = aula;
-    }
-
-    public int getCodicePrenotazione() {
-        return codicePrenotazione;
-    }
-
-    public void setCodicePrenotazione(int codicePrenotazione) {
-        this.codicePrenotazione = codicePrenotazione;
+        // Confronto dei campi
+        return (nome != null ? nome.equals(that.nome) : that.nome == null) &&
+                (motivazione != null ? motivazione.equals(that.motivazione) : that.motivazione == null) &&
+                (aula != null ? aula.equals(that.aula) : that.aula == null) &&
+                (data != null ? data.equals(that.data) : that.data == null) &&
+                (oraInizio != null ? oraInizio.equals(that.oraInizio) : that.oraInizio == null) &&
+                (oraFine != null ? oraFine.equals(that.oraFine) : that.oraFine == null);
     }
 }
