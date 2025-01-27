@@ -2,7 +2,7 @@ package UIPackage.Tabella.GestionePrenotazione;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
-import LogicaPackage.Utils.Costanti;
+import LogicaPackage.Utils.InputOutput;
 import LogicaPackage.Utils.SimpleDocumentListener;
 
 import javax.swing.*;
@@ -26,9 +26,11 @@ public class NuovaPrenotazione extends JFrame {
 
     public static final String AULA_DIDATTICA = "Aula didattica";
     public static final String LABORATORIO = "Laboratorio";
+    private ArrayList<Aula> aule;
 
-    public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate, ArrayList<Prenotazione> prenotazioni){
+    public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate, ArrayList<Prenotazione> prenotazioni, ArrayList<Aula> aule){
         super("Nuova prenotazione");
+        this.aule = aule;
         setResizable(false);
 
         JPanel mainPanel = new JPanel();
@@ -82,8 +84,8 @@ public class NuovaPrenotazione extends JFrame {
     private JPanel createOrarioPanel(int indexStart) {
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
-        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(Costanti.ORARI_AMMESSI, 0, Costanti.ORARI_AMMESSI.length - 1));
-        oraFineCombo = new JComboBox<>(Costanti.ORARI_AMMESSI);
+        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(InputOutput.ORARI_AMMESSI, 0, InputOutput.ORARI_AMMESSI.length - 1));
+        oraFineCombo = new JComboBox<>(InputOutput.ORARI_AMMESSI);
 
         oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
         oraInizioCombo.setSelectedIndex(indexStart);
@@ -111,7 +113,7 @@ public class NuovaPrenotazione extends JFrame {
     private JPanel createMotivazionePanel() {
         JPanel motivazionePanel = new JPanel();
         motivazionePanel.setLayout(new BoxLayout(motivazionePanel, BoxLayout.X_AXIS));
-        motivazioneComboBox = new JComboBox<>(Costanti.MOTIVAZIONI);
+        motivazioneComboBox = new JComboBox<>(InputOutput.MOTIVAZIONI);
 
         motivazionePanel.add(motivazioneComboBox);
 
@@ -120,7 +122,7 @@ public class NuovaPrenotazione extends JFrame {
 
     private JPanel createAulaPanel(int indexAula) {
         JPanel aulaPanel = new JPanel(new BorderLayout());
-        aulaComboBox = new JComboBox<>(Costanti.AULE);
+        aulaComboBox = new JComboBox<>(aule.toArray(new Aula[0]));
         aulaComboBox.setSelectedIndex(indexAula);
 
         aulaPanel.add(aulaComboBox, BorderLayout.CENTER);
@@ -154,8 +156,8 @@ public class NuovaPrenotazione extends JFrame {
         int max = isAulaDidattica ? 8 : 4;
 
         oraFineCombo.removeAllItems();
-        for(int i = orarioInizio + step; i < min(Costanti.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
-            oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
+        for(int i = orarioInizio + step; i < min(InputOutput.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
+            oraFineCombo.addItem(InputOutput.ORARI_AMMESSI[i]);
         }
 
         oraFineCombo.setSelectedIndex(0);

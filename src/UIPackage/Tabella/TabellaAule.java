@@ -23,13 +23,13 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
     private LocalDate currentDate;
     private ArrayList<Prenotazione> prenotazioni;
 
-    public TabellaAule() {
+    public TabellaAule(ArrayList<Aula> aule) {
         setLayout(new BorderLayout());
         this.prenotazioni = new ArrayList<>();
         this.currentDate = LocalDate.now();
 
         // Imposto la tabella
-        table = new JTable(new TableModel());
+        table = new JTable(new TableModel(aule));
         // Applicazione del renderer personalizzato a tutte le colonne
         table.setShowGrid(false);
         CellRenderer cellRenderer = new CellRenderer();
@@ -59,11 +59,11 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
 
                 Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
                 if(prenotazione == null){
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate, prenotazioni);
+                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate, prenotazioni, aule);
                     nuovaPrenotazione.setVisible(true);
                 }
                 else{
-                    ModificaPrenotazione modificaPrenotazione = new ModificaPrenotazione(prenotazione, TabellaAule.this);
+                    ModificaPrenotazione modificaPrenotazione = new ModificaPrenotazione(prenotazione, TabellaAule.this, aule);
                     modificaPrenotazione.setVisible(true);
                 }
             }

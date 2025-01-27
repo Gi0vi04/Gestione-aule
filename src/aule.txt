@@ -1,0 +1,8 @@
+Didattica 1,Didattica,1,120,true,false
+Didattica 2,Didattica,2,70,false,false
+Didattica 3,Didattica,3,150,true,true
+Didattica 4,Didattica,4,100,false,true
+Didattica 5,Didattica,5,200,true,true
+Laboratorio 1,Laboratorio,6,100,true,false
+Laboratorio 2,Laboratorio,7,150,true,true
+Laboratorio 3,Laboratorio,8,120,false,true

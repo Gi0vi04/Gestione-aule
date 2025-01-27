@@ -1,10 +1,14 @@
 package MainPackage;
 
+import LogicaPackage.Aula;
 import UIPackage.InformazioniLaterali.Intestazione;
 import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
+import static LogicaPackage.Utils.InputOutput.loadAule;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,7 +20,8 @@ public class Main {
         mainFrame.setMinimumSize(new Dimension(700,610));
 
         // Creazione della tabella all'interno di uno JScrollPane
-        TabellaAule tabellaAule = new TabellaAule();
+        ArrayList<Aula> aule = loadAule();
+        TabellaAule tabellaAule = new TabellaAule(aule);
         //Creazione delle informazioni laterali
         Intestazione intestazione = new Intestazione(tabellaAule);
 

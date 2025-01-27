@@ -2,7 +2,7 @@ package UIPackage.Tabella.GestionePrenotazione;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
-import LogicaPackage.Utils.Costanti;
+import LogicaPackage.Utils.InputOutput;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +10,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,9 +25,11 @@ public class ModificaPrenotazione extends JFrame {
     private JComboBox<String> oraInizioCombo;
     private JComboBox<String> oraFineCombo;
     private JButton buttonConferma;
+    private ArrayList<Aula> aule;
 
-    public ModificaPrenotazione(Prenotazione prenotazione, PrenotazioneListener prenotazioneListener){
+    public ModificaPrenotazione(Prenotazione prenotazione, PrenotazioneListener prenotazioneListener, ArrayList<Aula> aule){
         super("Modifica prenotazione");
+        this.aule = aule;
         setResizable(false);
 
         JPanel mainPanel = new JPanel();
@@ -83,8 +86,8 @@ public class ModificaPrenotazione extends JFrame {
     private JPanel editOrarioPanel(LocalTime oraInizio, LocalTime oraFine) {
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
-        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(Costanti.ORARI_AMMESSI, 0, Costanti.ORARI_AMMESSI.length - 1));
-        oraFineCombo = new JComboBox<>(Costanti.ORARI_AMMESSI);
+        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(InputOutput.ORARI_AMMESSI, 0, InputOutput.ORARI_AMMESSI.length - 1));
+        oraFineCombo = new JComboBox<>(InputOutput.ORARI_AMMESSI);
 
         oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
 
@@ -114,22 +117,12 @@ public class ModificaPrenotazione extends JFrame {
     private JPanel editMotivazionePanel(String previousValue) {
         JPanel motivazionePanel = new JPanel();
         motivazionePanel.setLayout(new BoxLayout(motivazionePanel, BoxLayout.X_AXIS));
-        motivazioneComboBox = new JComboBox<>(Costanti.MOTIVAZIONI);
+        motivazioneComboBox = new JComboBox<>(InputOutput.MOTIVAZIONI);
         motivazioneComboBox.setSelectedItem(previousValue);
 
         motivazionePanel.add(motivazioneComboBox);
 
         return motivazionePanel;
-    }
-
-    private JPanel editAulaPanel(Aula previousValue) {
-        JPanel aulaPanel = new JPanel(new BorderLayout());
-        aulaComboBox = new JComboBox<>(Costanti.AULE);
-        aulaComboBox.setSelectedItem(previousValue);
-
-        aulaPanel.add(aulaComboBox, BorderLayout.CENTER);
-
-        return aulaPanel;
     }
 
     private JPanel editNomePanel(String previousValue) {
@@ -147,6 +140,16 @@ public class ModificaPrenotazione extends JFrame {
         return nomePanel;
     }
 
+    private JPanel editAulaPanel(Aula previousValue) {
+        JPanel aulaPanel = new JPanel(new BorderLayout());
+        aulaComboBox = new JComboBox<>(aule.toArray(new Aula[0]));
+        aulaComboBox.setSelectedItem(previousValue);
+
+        aulaPanel.add(aulaComboBox, BorderLayout.CENTER);
+
+        return aulaPanel;
+    }
+
     private void aggiornaOrarioFineAmmesso(){
         Aula aulaSelezinata = (Aula) aulaComboBox.getSelectedItem();
         boolean isAulaDidattica = aulaSelezinata.getTipologia().equals("Aula didattica");
@@ -157,8 +160,8 @@ public class ModificaPrenotazione extends JFrame {
         int max = isAulaDidattica ? 8 : 4;
 
         oraFineCombo.removeAllItems();
-        for(int i = orarioInizio + step; i < min(Costanti.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
-            oraFineCombo.addItem(Costanti.ORARI_AMMESSI[i]);
+        for(int i = orarioInizio + step; i < min(InputOutput.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
+            oraFineCombo.addItem(InputOutput.ORARI_AMMESSI[i]);
         }
 
         oraFineCombo.setSelectedIndex(0);

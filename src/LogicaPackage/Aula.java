@@ -3,10 +3,10 @@ package LogicaPackage;
 import java.io.Serializable;
 
 public class Aula implements Serializable {
+    private String nomeAula;
+    private String tipologia;
     private int numeroAula;
     private int capienza;
-    private String tipologia;
-    private String nomeAula;
 
     public Aula(int numeroAula, int capienza, String tipologia, String nomeAula){
         this.numeroAula = numeroAula;
@@ -17,10 +17,6 @@ public class Aula implements Serializable {
 
     public int getNumeroAula() {
         return numeroAula;
-    }
-
-    public int getCapienza() {
-        return capienza;
     }
 
     public String getNomeAula() {
