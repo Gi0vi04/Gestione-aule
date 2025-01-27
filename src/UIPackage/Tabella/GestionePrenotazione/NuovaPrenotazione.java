@@ -13,19 +13,16 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
-import static java.lang.Math.min;
-
 public class NuovaPrenotazione extends JFrame {
     private JTextField nomeTextField;
     private JComboBox<Aula> aulaComboBox;
     private JComboBox<String> motivazioneComboBox;
     private JSpinner dateSpinner;
-    private JComboBox<String> oraInizioCombo;
-    private JComboBox<String> oraFineCombo;
-    private JButton buttonConferma;
+    private JComboBox<LocalTime> oraInizioCombo;
+    private JComboBox<LocalTime> oraFineCombo = new JComboBox<>();
+    private JButton buttonConferma = new JButton("Conferma");
 
-    public static final String AULA_DIDATTICA = "Aula didattica";
-    public static final String LABORATORIO = "Laboratorio";
+    public static final String DIDATTICA = "Didattica";
     private ArrayList<Aula> aule;
 
     public NuovaPrenotazione(int row, int column, PrenotazioneListener prenotazioneListener, LocalDate currentDate, ArrayList<Prenotazione> prenotazioni, ArrayList<Aula> aule){
@@ -42,7 +39,7 @@ public class NuovaPrenotazione extends JFrame {
         mainPanel.add(createMotivazionePanel());
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(createDateSpinner(currentDate));
-        mainPanel.add(createOrarioPanel(row));
+        mainPanel.add(createOrarioPanel(row, prenotazioni));
         mainPanel.add(Box.createVerticalStrut(15));
         mainPanel.add(createCTAPanel(prenotazioneListener, prenotazioni.size()));
 
@@ -53,7 +50,6 @@ public class NuovaPrenotazione extends JFrame {
 
     private JPanel createCTAPanel(PrenotazioneListener prenotazioneListener, int codicePrenotazione) {
         JPanel ctaPanel = new JPanel(new BorderLayout());
-        buttonConferma = new JButton("Conferma");
         JButton buttonAnnulla = new JButton("Annulla");
         buttonAnnulla.addActionListener(e -> dispose());
 
@@ -61,14 +57,12 @@ public class NuovaPrenotazione extends JFrame {
         buttonConferma.addActionListener(e -> {
             Date dateSelected = (Date) dateSpinner.getValue();
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalTime startTime = LocalTime.parse((String) oraInizioCombo.getSelectedItem());
-            LocalTime endTime = LocalTime.parse((String) oraFineCombo.getSelectedItem());
 
             Prenotazione prenotazione = new Prenotazione(
                     (Aula) aulaComboBox.getSelectedItem(),
                     localDateSelected,
-                    startTime,
-                    endTime,
+                    (LocalTime) oraInizioCombo.getSelectedItem(),
+                    (LocalTime) oraFineCombo.getSelectedItem(),
                     nomeTextField.getText(),
                     (String) motivazioneComboBox.getSelectedItem());
             prenotazioneListener.addPrenotazione(prenotazione);
@@ -81,20 +75,102 @@ public class NuovaPrenotazione extends JFrame {
         return ctaPanel;
     }
 
-    private JPanel createOrarioPanel(int indexStart) {
+    private JPanel createOrarioPanel(int startIndex, ArrayList<Prenotazione> prenotazioni) {
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
-        oraInizioCombo = new JComboBox<>(Arrays.copyOfRange(InputOutput.ORARI_AMMESSI, 0, InputOutput.ORARI_AMMESSI.length - 1));
-        oraFineCombo = new JComboBox<>(InputOutput.ORARI_AMMESSI);
 
-        oraInizioCombo.addActionListener(e -> aggiornaOrarioFineAmmesso());
-        oraInizioCombo.setSelectedIndex(indexStart);
+        calcolaOrariInizioDisponibili(prenotazioni);
+        calcolaOrariFineDisponibili(prenotazioni);
+
+        ArrayList<LocalTime> orariDisponibili = new ArrayList<>(Arrays.asList(
+                LocalTime.of(8, 0),
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                LocalTime.of(11, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(13, 0),
+                LocalTime.of(14, 0),
+                LocalTime.of(15, 0),
+                LocalTime.of(16, 0),
+                LocalTime.of(17, 0),
+                LocalTime.of(18, 0)
+        ));
+
+        oraInizioCombo.addActionListener(e -> calcolaOrariFineDisponibili(prenotazioni));
+        oraInizioCombo.setSelectedItem(orariDisponibili.get(startIndex));
 
         orarioPanel.add(oraInizioCombo);
         orarioPanel.add(oraFineCombo);
-
         return orarioPanel;
     }
+
+    private void calcolaOrariFineDisponibili(ArrayList<Prenotazione> prenotazioni) {
+        Date selectedDate = (Date) dateSpinner.getValue();
+        LocalDate selectedLocalDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Aula aulaSelected = (Aula) aulaComboBox.getSelectedItem();
+        int hoursStep = aulaSelected.getTipologia().equals(DIDATTICA) ? 1 : 2;
+        int maxHours = aulaSelected.getTipologia().equals(DIDATTICA) ? 8 : 4;
+        LocalTime orarioInizio = (LocalTime) oraInizioCombo.getSelectedItem();
+
+        LocalTime minOrarioInizio = LocalTime.of(18,0);
+        for(int i = 0; i < prenotazioni.size(); i++){
+            Prenotazione prenotazione = prenotazioni.get(i);
+
+            if (prenotazione.getData().isEqual(selectedLocalDate) && prenotazione.getAula().getNumeroAula() == aulaSelected.getNumeroAula()) {
+                LocalTime oraInizioPrenotazione = prenotazione.getOraInizio();
+                if(oraInizioPrenotazione.isBefore(minOrarioInizio) && oraInizioPrenotazione.isAfter(orarioInizio)) minOrarioInizio = prenotazione.getOraInizio();
+            }
+        }
+
+
+        oraFineCombo.removeAllItems();
+        LocalTime currentTime = orarioInizio.plusHours(hoursStep);
+
+        LocalTime maxHoursLocalTime = LocalTime.of(19,0);
+        if(orarioInizio.plusHours(8).isBefore(LocalTime.of(18,0)) && orarioInizio.plusHours(8).isAfter(LocalTime.of(8,0))) maxHoursLocalTime = orarioInizio.plusHours(8);
+        while(!currentTime.isAfter(minOrarioInizio) && currentTime.isBefore(maxHoursLocalTime)){
+            oraFineCombo.addItem(currentTime);
+            currentTime = currentTime.plusHours(hoursStep);
+        }
+
+        checkValidity();
+    }
+
+    private void calcolaOrariInizioDisponibili(ArrayList<Prenotazione> prenotazioni) {
+        Date selectedDate = (Date) dateSpinner.getValue();
+        LocalDate selectedLocalDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Aula aulaSelected = (Aula) aulaComboBox.getSelectedItem();
+
+        ArrayList<LocalTime> orariOccupati = new ArrayList<>();
+        for (int i = 0; i < prenotazioni.size(); i++) {
+            Prenotazione prenotazione = prenotazioni.get(i);
+            if (prenotazione.getData().isEqual(selectedLocalDate) && prenotazione.getAula().getNumeroAula() == aulaSelected.getNumeroAula()) {
+                LocalTime orarioInizio = prenotazione.getOraInizio();
+                LocalTime orarioFine = prenotazione.getOraFine();
+                while (!orarioInizio.equals(orarioFine)) {
+                    orariOccupati.add(orarioInizio);
+                    orarioInizio = orarioInizio.plusHours(1);
+                }
+            }
+        }
+
+        ArrayList<LocalTime> orariDisponibili = new ArrayList<>(Arrays.asList(
+                LocalTime.of(8, 0),
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                LocalTime.of(11, 0),
+                LocalTime.of(12, 0),
+                LocalTime.of(13, 0),
+                LocalTime.of(14, 0),
+                LocalTime.of(15, 0),
+                LocalTime.of(16, 0),
+                LocalTime.of(17, 0),
+                LocalTime.of(18, 0)
+        ));
+        orariDisponibili.removeAll(orariOccupati);
+        oraInizioCombo = new JComboBox<>(orariDisponibili.toArray(new LocalTime[0]));
+    }
+
 
     private JSpinner createDateSpinner(LocalDate currentDate) {
         Calendar calendar = Calendar.getInstance();
@@ -146,26 +222,9 @@ public class NuovaPrenotazione extends JFrame {
         return nomePanel;
     }
 
-    private void aggiornaOrarioFineAmmesso(){
-        Aula aulaSelezinata = (Aula) aulaComboBox.getSelectedItem();
-        boolean isAulaDidattica = aulaSelezinata.getTipologia().equals("Aula didattica");
-
-        int orarioInizio = oraInizioCombo.getSelectedIndex();
-        String orarioFine = (String) oraFineCombo.getSelectedItem();
-        int step = isAulaDidattica ? 1 : 2;
-        int max = isAulaDidattica ? 8 : 4;
-
-        oraFineCombo.removeAllItems();
-        for(int i = orarioInizio + step; i < min(InputOutput.ORARI_AMMESSI.length, orarioInizio + max + 1); i += step){
-            oraFineCombo.addItem(InputOutput.ORARI_AMMESSI[i]);
-        }
-
-        oraFineCombo.setSelectedIndex(0);
-    }
-
     private void checkValidity(){
         String nome = nomeTextField.getText().trim();
-        boolean isValid = !nome.isEmpty() && nome.matches("[a-zA-Z\\s]+");
+        boolean isValid = !nome.isEmpty() && nome.matches("[a-zA-Z\\s]+") && oraFineCombo.getItemCount() > 0;
         buttonConferma.setEnabled(isValid);
     }
 }

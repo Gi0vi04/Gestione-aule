@@ -20,8 +20,8 @@ public class TableModel extends AbstractTableModel {
         }
 
         data = new Object[10][columnNames.length];
-        for(int i = 0; i < 10; i++){
-            data[i][0] = InputOutput.ORARI_AMMESSI[i] + " - " + InputOutput.ORARI_AMMESSI[i + 1];
+        for(int i = 8; i <= 18; i++){
+            data[i][0] =  i + " - " + i+1;
         }
     }
 
