@@ -1,5 +1,6 @@
 package UIPackage.InformazioniLaterali;
 
+import LogicaPackage.Utils.FileIO;
 import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
@@ -54,8 +55,8 @@ public class Intestazione extends JPanel {
         JButton saveButton = new JButton("Salva");
         JButton loadButton = new JButton("Carica");
 
-        saveButton.addActionListener(e -> tabellaAule.salvaPrenotazioni());
-        loadButton.addActionListener(e -> tabellaAule.caricaPrenotazioni());
+        saveButton.addActionListener(e -> FileIO.savePrenotazioni(tabellaAule.getPrenotazioni()));
+        loadButton.addActionListener(e -> FileIO.caricaPrenotazioni(tabellaAule));
 
         ctaPanel.add(saveButton);
         ctaPanel.add(loadButton);

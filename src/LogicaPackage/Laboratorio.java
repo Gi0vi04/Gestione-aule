@@ -14,7 +14,7 @@ public class Laboratorio extends Aula {
      * @param isPreseElettrichePresente presenza o meno delle prese elettriche
      */
     public Laboratorio(int numeroAula, String nomeAula, int capienza, boolean isPcPresente, boolean isPreseElettrichePresente) {
-        super(numeroAula, nomeAula, Costanti.LABORATORIO, capienza );
+        super(numeroAula, nomeAula, Costanti.LABORATORIO, capienza);
         this.isPcPresente = isPcPresente;
         this.isPreseElettrichePresente = isPreseElettrichePresente;
     }

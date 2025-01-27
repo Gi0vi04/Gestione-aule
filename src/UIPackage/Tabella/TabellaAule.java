@@ -2,18 +2,14 @@ package UIPackage.Tabella;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
-import LogicaPackage.Utils.CustomFileChooser;
-import LogicaPackage.Utils.Dialog;
-import UIPackage.Tabella.GestionePrenotazione.ModificaPrenotazione;
+//import UIPackage.Tabella.GestionePrenotazione.ModificaPrenotazione;
 import UIPackage.Tabella.GestionePrenotazione.NuovaPrenotazione;
 import UIPackage.Tabella.GestionePrenotazione.PrenotazioneListener;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.PrinterException;
-import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -62,10 +58,10 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
                     NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate, prenotazioni, aule);
                     nuovaPrenotazione.setVisible(true);
                 }
-                else{
-                    ModificaPrenotazione modificaPrenotazione = new ModificaPrenotazione(prenotazione, TabellaAule.this, aule);
-                    modificaPrenotazione.setVisible(true);
-                }
+//                else{
+//                    ModificaPrenotazione modificaPrenotazione = new ModificaPrenotazione(prenotazione, TabellaAule.this, aule);
+//                    modificaPrenotazione.setVisible(true);
+//                }
             }
         });
         // Aggiungo un ComponentListener alla tabella per gestire il ridimensionamento
@@ -89,10 +85,16 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    public ArrayList<Prenotazione> getPrenotazioni(){
+        return prenotazioni;
+    }
+    public LocalDate getCurrentDate(){
+        return currentDate;
+    }
+
     public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
-
     public void setCurrentDate(LocalDate currentDate) {
         this.currentDate = currentDate;
 
@@ -100,80 +102,7 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         refreshTable(0);
     }
 
-    public LocalDate getCurrentDate(){
-        return currentDate;
-    }
-
-    public void salvaPrenotazioni(){
-        CustomFileChooser fileChooser = new CustomFileChooser();
-        fileChooser.setDialogTitle("Salva le prenotazioni");
-
-        // Imposta un filtro per i file con estensione ".prenotazioni"
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("File prenotazioni (*.prenotazioni)", "prenotazioni");
-        fileChooser.setFileFilter(filter);
-
-        int userSelection = fileChooser.showSaveDialog(null);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-
-            FileOutputStream fileOutputStream = null;
-            try {
-                if(!fileToSave.getName().endsWith(".prenotazioni")) fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile() + ".prenotazioni");
-                else fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile());
-
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                for (Prenotazione prenotazione : prenotazioni) objectOutputStream.writeObject(prenotazione);
-            }
-            catch (IOException e) { new Dialog("Errore durante il salvataggio"); }
-            finally { new Dialog("Salvataggio avvenuto con successo"); }
-        } else {
-            System.out.println("Operazione annullata dall'utente.");
-        }
-    }
-
-    public void caricaPrenotazioni(){
-        CustomFileChooser fileChooser = new CustomFileChooser();
-        fileChooser.setDialogTitle("Carica le prenotazioni");
-
-        // Imposta un filtro per i file con estensione ".prenotazioni"
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("File prenotazioni (*.prenotazioni)", "prenotazioni");
-        fileChooser.setFileFilter(filter);
-
-        int userSelection = fileChooser.showOpenDialog(null);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToLoad = fileChooser.getSelectedFile();
-
-            if(!fileToLoad.getName().endsWith(".prenotazioni")){
-                new Dialog("Il file non è del formato giusto.");
-                return;
-            }
-
-            ArrayList<Prenotazione> prenotazioniCaricate = new ArrayList<>();
-            FileInputStream fileInputStream = null;
-            try {
-                fileInputStream = new FileInputStream(fileToLoad.getAbsoluteFile());
-                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-
-                while (true) {
-                    try {
-                        Prenotazione prenotazione = (Prenotazione) objectInputStream.readObject();
-                        prenotazioniCaricate.add(prenotazione);
-                    }
-                    catch (EOFException e) { break; }
-                }
-            }
-            catch (ClassNotFoundException | IOException e) { new Dialog("Errore durante il caricamento delle prenotazioni."); }
-            finally {
-                setPrenotazioni(prenotazioniCaricate);
-                clearTable();
-                refreshTable(0);
-            }
-        } else {
-            System.out.println("Operazione annullata dall'utente.");
-        }
-    }
-
-    private void refreshTable(int start){
+    public void refreshTable(int start){
         LocalTime referenceTime = LocalTime.parse("08:00");
 
         for(int i = start; i < prenotazioni.size(); i++){
@@ -194,7 +123,7 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         }
     }
 
-    private void clearTable() {
+    public void clearTable() {
         for (int row = 0; row < table.getRowCount(); row++) {
             for (int col = 1; col < table.getColumnCount(); col++) {
                 table.setValueAt(null, row, col);

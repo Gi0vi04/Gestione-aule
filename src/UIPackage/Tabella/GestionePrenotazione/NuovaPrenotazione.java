@@ -2,7 +2,7 @@ package UIPackage.Tabella.GestionePrenotazione;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
-import LogicaPackage.Utils.InputOutput;
+import LogicaPackage.Utils.Costanti;
 import LogicaPackage.Utils.SimpleDocumentListener;
 
 import javax.swing.*;
@@ -59,12 +59,11 @@ public class NuovaPrenotazione extends JFrame {
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
             Prenotazione prenotazione = new Prenotazione(
-                    (Aula) aulaComboBox.getSelectedItem(),
-                    localDateSelected,
+                    nomeTextField.getText(), (Aula) aulaComboBox.getSelectedItem(),
+                    (String) motivazioneComboBox.getSelectedItem(), localDateSelected,
                     (LocalTime) oraInizioCombo.getSelectedItem(),
-                    (LocalTime) oraFineCombo.getSelectedItem(),
-                    nomeTextField.getText(),
-                    (String) motivazioneComboBox.getSelectedItem());
+                    (LocalTime) oraFineCombo.getSelectedItem()
+            );
             prenotazioneListener.addPrenotazione(prenotazione);
 
             dispose();
@@ -108,8 +107,8 @@ public class NuovaPrenotazione extends JFrame {
         Date selectedDate = (Date) dateSpinner.getValue();
         LocalDate selectedLocalDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Aula aulaSelected = (Aula) aulaComboBox.getSelectedItem();
-        int hoursStep = aulaSelected.getTipologia().equals(DIDATTICA) ? 1 : 2;
-        int maxHours = aulaSelected.getTipologia().equals(DIDATTICA) ? 8 : 4;
+        int hoursStep = aulaSelected.getTipologia().equals(Costanti.DIDATTICA) ? 1 : 2;
+        int maxHours = aulaSelected.getTipologia().equals(Costanti.DIDATTICA) ? 8 : 4;
         LocalTime orarioInizio = (LocalTime) oraInizioCombo.getSelectedItem();
 
         LocalTime minOrarioInizio = LocalTime.of(18,0);
@@ -127,7 +126,7 @@ public class NuovaPrenotazione extends JFrame {
         LocalTime currentTime = orarioInizio.plusHours(hoursStep);
 
         LocalTime maxHoursLocalTime = LocalTime.of(19,0);
-        if(orarioInizio.plusHours(8).isBefore(LocalTime.of(18,0)) && orarioInizio.plusHours(8).isAfter(LocalTime.of(8,0))) maxHoursLocalTime = orarioInizio.plusHours(8);
+        if(orarioInizio.plusHours(maxHours).isBefore(LocalTime.of(18,0)) && orarioInizio.plusHours(maxHours).isAfter(LocalTime.of(8,0))) maxHoursLocalTime = orarioInizio.plusHours(8);
         while(!currentTime.isAfter(minOrarioInizio) && currentTime.isBefore(maxHoursLocalTime)){
             oraFineCombo.addItem(currentTime);
             currentTime = currentTime.plusHours(hoursStep);
@@ -189,7 +188,7 @@ public class NuovaPrenotazione extends JFrame {
     private JPanel createMotivazionePanel() {
         JPanel motivazionePanel = new JPanel();
         motivazionePanel.setLayout(new BoxLayout(motivazionePanel, BoxLayout.X_AXIS));
-        motivazioneComboBox = new JComboBox<>(InputOutput.MOTIVAZIONI);
+        motivazioneComboBox = new JComboBox<>(Costanti.MOTIVAZIONI);
 
         motivazionePanel.add(motivazioneComboBox);
 

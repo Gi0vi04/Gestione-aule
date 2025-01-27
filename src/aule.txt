@@ -1,8 +1,8 @@
-1,Aula Magna,Aula,300,true,false
-2,Aula 101,Aula,120,true,true
-3,Aula 102,Aula,100,false,false
-4,Aula 201,Aula,80,false,true
-4,Aula 202,Aula,95,false,true
-5,Laboratorio Chimica,Laboratorio,50,true,false
-6,Laboratorio Fisica,Laboratorio,70,true,true
-7,Laboratorio Informatica,Laboratorio,40,false,true
+1,Aula Magna,Didattica,300,true,false
+2,Aula 101,Didattica,120,true,true
+3,Aula 102,Didattica,100,false,false
+4,Aula 201,Didattica,80,false,true
+5,Aula 202,Didattica,95,false,true
+6,Laboratorio Chimica,Laboratorio,50,true,false
+7,Laboratorio Fisica,Laboratorio,70,true,true
+8,Laboratorio Informatica,Laboratorio,40,false,true

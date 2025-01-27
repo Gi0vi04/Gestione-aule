@@ -6,21 +6,39 @@ import java.time.LocalTime;
 
 public class Prenotazione implements Serializable {
     private String nome;
-    private String motivazione;
     private Aula aula;
+    private String motivazione;
     private LocalDate data;
     private LocalTime oraInizio;
     private LocalTime oraFine;
 
-    public Prenotazione(Aula aula, LocalDate data, LocalTime oraInizio, LocalTime oraFine, String nome, String motivazione){
+    /**
+     *
+     * @param nome nome del prenotante
+     * @param aula aula prenotata
+     * @param motivazione motivazione della prenotazione
+     * @param data data della prenotazione
+     * @param oraInizio orario di inizio della prenotazione
+     * @param oraFine orario di fine della prenotazione
+     */
+    public Prenotazione(String nome, Aula aula, String motivazione, LocalDate data, LocalTime oraInizio, LocalTime oraFine){
+        this.nome = nome;
         this.aula = aula;
+        this.motivazione = motivazione;
         this.data = data;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
-        this.nome = nome;
-        this.motivazione = motivazione;
     }
 
+    public String getNome() {
+        return nome;
+    }
+    public Aula getAula() {
+        return aula;
+    }
+    public String getMotivazione() {
+        return motivazione;
+    }
     public LocalDate getData() {
         return data;
     }
@@ -29,19 +47,6 @@ public class Prenotazione implements Serializable {
     }
     public LocalTime getOraFine() {
         return oraFine;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public String getMotivazione() {
-        return motivazione;
-    }
-    public Aula getAula() {
-        return aula;
-    }
-
-    public String generateCodicePrenotazione(Prenotazione prenotazione){
-        return prenotazione.getAula().hashCode() + "_" + prenotazione.data.hashCode();
     }
 
     @Override

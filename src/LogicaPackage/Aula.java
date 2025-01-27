@@ -17,9 +17,9 @@ public class Aula implements Serializable {
      */
     public Aula(int numeroAula, String nomeAula, String tipologia, int capienza){
         this.numeroAula = numeroAula;
-        this.capienza = capienza;
-        this.tipologia = tipologia;
         this.nomeAula = nomeAula;
+        this.tipologia = tipologia;
+        this.capienza = capienza;
     }
 
     public int getNumeroAula() {
