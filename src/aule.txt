@@ -1,8 +1,8 @@
-Didattica 1,Didattica,1,120,true,false
-Didattica 2,Didattica,2,70,false,false
-Didattica 3,Didattica,3,150,true,true
-Didattica 4,Didattica,4,100,false,true
-Didattica 5,Didattica,5,200,true,true
-Laboratorio 1,Laboratorio,6,100,true,false
-Laboratorio 2,Laboratorio,7,150,true,true
-Laboratorio 3,Laboratorio,8,120,false,true
+1,Aula Magna,Aula,300,true,false
+2,Aula 101,Aula,120,true,true
+3,Aula 102,Aula,100,false,false
+4,Aula 201,Aula,80,false,true
+4,Aula 202,Aula,95,false,true
+5,Laboratorio Chimica,Laboratorio,50,true,false
+6,Laboratorio Fisica,Laboratorio,70,true,true
+7,Laboratorio Informatica,Laboratorio,40,false,true

@@ -1,28 +1,35 @@
 package LogicaPackage;
 
+import LogicaPackage.Utils.Costanti;
+
 public class Laboratorio extends Aula {
-    private boolean presenzaPc;
-    private boolean presenzaPreseElettriche;
+    private boolean isPcPresente;
+    private boolean isPreseElettrichePresente;
 
-    public Laboratorio(int numeroAula, int capienza, boolean presenzaPc, boolean presenzaPreseElettriche, String nomeAula) {
-        super(numeroAula, capienza, "Laboratorio", nomeAula);
-        this.presenzaPc = presenzaPc;
-        this.presenzaPreseElettriche = presenzaPreseElettriche;
+    /**
+     * @param numeroAula codice identificativo dell'aula
+     * @param nomeAula nome dell'aula
+     * @param capienza capienza dell'aula
+     * @param isPcPresente presenza o meno dei pc
+     * @param isPreseElettrichePresente presenza o meno delle prese elettriche
+     */
+    public Laboratorio(int numeroAula, String nomeAula, int capienza, boolean isPcPresente, boolean isPreseElettrichePresente) {
+        super(numeroAula, nomeAula, Costanti.LABORATORIO, capienza );
+        this.isPcPresente = isPcPresente;
+        this.isPreseElettrichePresente = isPreseElettrichePresente;
     }
 
-    public boolean isPresenzaPc() {
-        return presenzaPc;
+    public boolean isPcPresente() {
+        return isPcPresente;
+    }
+    public boolean isPreseElettrichePresente() {
+        return isPreseElettrichePresente;
     }
 
-    public void setPresenzaPc(boolean presenzaPc) {
-        this.presenzaPc = presenzaPc;
+    public void setPcPresente(boolean pcPresente) {
+        this.isPcPresente = pcPresente;
     }
-
-    public boolean isPresenzaPreseElettriche() {
-        return presenzaPreseElettriche;
-    }
-
-    public void setPresenzaPreseElettriche(boolean presenzaPreseElettriche) {
-        this.presenzaPreseElettriche = presenzaPreseElettriche;
+    public void setPreseElettrichePresente(boolean preseElettrichePresente) {
+        this.isPreseElettrichePresente = preseElettrichePresente;
     }
 }

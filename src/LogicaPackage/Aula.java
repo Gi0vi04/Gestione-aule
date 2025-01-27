@@ -8,7 +8,14 @@ public class Aula implements Serializable {
     private int numeroAula;
     private int capienza;
 
-    public Aula(int numeroAula, int capienza, String tipologia, String nomeAula){
+    /**
+     *
+     * @param numeroAula codice identificativo dell'aula
+     * @param nomeAula nome dell'aula
+     * @param tipologia tipologia dell'aula (Didattica o laboratorio)
+     * @param capienza capienza dell'aula
+     */
+    public Aula(int numeroAula, String nomeAula, String tipologia, int capienza){
         this.numeroAula = numeroAula;
         this.capienza = capienza;
         this.tipologia = tipologia;
@@ -18,11 +25,9 @@ public class Aula implements Serializable {
     public int getNumeroAula() {
         return numeroAula;
     }
-
     public String getNomeAula() {
         return nomeAula;
     }
-
     public String getTipologia() {
         return tipologia;
     }
@@ -31,7 +36,6 @@ public class Aula implements Serializable {
     public String toString(){
         return nomeAula;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -39,7 +43,6 @@ public class Aula implements Serializable {
         Aula aula = (Aula) obj;
         return nomeAula != null && nomeAula.equals(aula.nomeAula);
     }
-
     @Override
     public int hashCode() {
         return nomeAula != null ? nomeAula.hashCode() : 0;

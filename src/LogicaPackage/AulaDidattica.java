@@ -1,30 +1,37 @@
 package LogicaPackage;
 
+import LogicaPackage.Utils.Costanti;
+
 import java.io.Serializable;
 
 public class AulaDidattica extends Aula implements Serializable {
-    private boolean presenzaLavagna;
-    private boolean presenzaVideoproiettore;
+    private boolean isLavagnaPresente;
+    private boolean isVideoproiettorePresente;
 
-    public AulaDidattica(int numeroAula, int capienza, boolean presenzaLavagna, boolean presenzaVideoproiettore, String nomeAula) {
-        super(numeroAula, capienza, "Didattica", nomeAula);
-        this.presenzaLavagna = presenzaLavagna;
-        this.presenzaVideoproiettore = presenzaVideoproiettore;
+    /**
+     * @param numeroAula codice identificativo dell'aula
+     * @param nomeAula nome dell'aula
+     * @param capienza capienza dell'aula
+     * @param isLavagnaPresente presenza o meno della lavagna
+     * @param isVideoproiettorePresente presenza o meno del video-proiettore
+     */
+    public AulaDidattica(int numeroAula, String nomeAula, int capienza, boolean isLavagnaPresente, boolean isVideoproiettorePresente) {
+        super(numeroAula, nomeAula, Costanti.DIDATTICA, capienza);
+        this.isLavagnaPresente = isLavagnaPresente;
+        this.isVideoproiettorePresente = isVideoproiettorePresente;
     }
 
-    public boolean getPresenzaLavagna() {
-        return presenzaLavagna;
+    public boolean isLavagnaPresente() {
+        return isLavagnaPresente;
+    }
+    public boolean isVideoproiettorePresente() {
+        return isVideoproiettorePresente;
     }
 
-    public void setPresenzaLavagna(boolean presenzaLavagna) {
-        this.presenzaLavagna = presenzaLavagna;
+    public void setLavagnaPresente(boolean lavagnaPresente) {
+        this.isLavagnaPresente = lavagnaPresente;
     }
-
-    public boolean getPresenzaVideoproiettore() {
-        return presenzaVideoproiettore;
-    }
-
-    public void setPresenzaVideoproiettore(boolean presenzaVideoproiettore) {
-        this.presenzaVideoproiettore = presenzaVideoproiettore;
+    public void setVideoproiettorePresente(boolean videoproiettorePresente) {
+        this.isVideoproiettorePresente = videoproiettorePresente;
     }
 }
