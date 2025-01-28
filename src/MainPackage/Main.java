@@ -2,7 +2,8 @@ package MainPackage;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Utils.FileIO;
-import UIPackage.InformazioniLaterali.Intestazione;
+import UIPackage.CustomUI.CustomDialog;
+import UIPackage.Intestazione;
 import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
@@ -20,7 +21,6 @@ public class Main {
         ArrayList<Aula> aule = FileIO.loadAule();
         TabellaAule tabellaAule = new TabellaAule(aule);
         Intestazione intestazione = new Intestazione(tabellaAule);
-
 
         mainFrame.add(intestazione, BorderLayout.NORTH);
         mainFrame.add(tabellaAule, BorderLayout.CENTER);

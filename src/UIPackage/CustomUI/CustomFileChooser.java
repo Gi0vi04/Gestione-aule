@@ -1,4 +1,4 @@
-package LogicaPackage.Utils;
+package UIPackage.CustomUI;
 
 import javax.swing.*;
 import java.io.File;

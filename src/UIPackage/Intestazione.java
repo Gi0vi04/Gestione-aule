@@ -1,4 +1,4 @@
-package UIPackage.InformazioniLaterali;
+package UIPackage;
 
 import LogicaPackage.Utils.FileIO;
 import UIPackage.Tabella.TabellaAule;
@@ -6,7 +6,6 @@ import UIPackage.Tabella.TabellaAule;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;

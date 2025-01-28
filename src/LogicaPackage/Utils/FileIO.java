@@ -4,6 +4,8 @@ import LogicaPackage.Aula;
 import LogicaPackage.AulaDidattica;
 import LogicaPackage.Laboratorio;
 import LogicaPackage.Prenotazione;
+import UIPackage.CustomUI.CustomFileChooser;
+import UIPackage.CustomUI.CustomDialog;
 import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
@@ -72,8 +74,8 @@ public final class FileIO {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
                 for (Prenotazione prenotazione : prenotazioni) objectOutputStream.writeObject(prenotazione);
             }
-            catch (IOException e) { new Dialog("Errore durante il salvataggio"); }
-            finally { new Dialog("Salvataggio avvenuto con successo"); }
+            catch (IOException e) { new CustomDialog("Salvataggio delle prenotazioni", "Errore durante il salvataggio delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state salvate."); }
+            finally { new CustomDialog("Salvataggio delle prenotazioni", "Salvataggio avvenuto con successo", "Le tue prenotazioni sono state salvate correttamente."); }
         } else {
             System.out.println("Operazione annullata dall'utente.");
         }
@@ -95,7 +97,7 @@ public final class FileIO {
             File fileToLoad = fileChooser.getSelectedFile();
 
             if(!fileToLoad.getName().endsWith(".prenotazioni")){
-                new Dialog("Il file non è del formato giusto.");
+                new CustomDialog("Caricamento delle prenotazioni", "Errore durante il caricamento delle prenotazioni", "Il formato del file potrebbe non essere quello corretto.");
                 return;
             }
 
@@ -113,7 +115,7 @@ public final class FileIO {
                     catch (EOFException e) { break; }
                 }
             }
-            catch (ClassNotFoundException | IOException e) { new Dialog("Errore durante il caricamento delle prenotazioni."); }
+            catch (ClassNotFoundException | IOException e) { new CustomDialog("Caricamento delle prenotazioni", "Errore durante il caricamento delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state caricate."); }
             finally {
                 tabellaAule.setPrenotazioni(prenotazioniCaricate);
                 tabellaAule.clearTable();
