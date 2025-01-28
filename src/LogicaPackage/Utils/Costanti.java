@@ -1,8 +1,11 @@
 package LogicaPackage.Utils;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 public final class Costanti {
 
@@ -28,7 +31,13 @@ public final class Costanti {
             LocalTime.of(18, 0)
     ));
     public static final String[] MOTIVAZIONI = {
-            "Lezione", "Esame", "Tutorato"
+            "Lezione", "Esame", "Tutorato", "Ricevimento"
     };
+    public static final Map<String, Color> COLORI_MOTIVAZIONI = Map.of(
+            "Lezione", Color.ORANGE,
+            "Esame", Color.PINK,
+            "Tutorato", Color.CYAN,
+            "Ricevimento", Color.GREEN
+    );
 }
 

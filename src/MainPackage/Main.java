@@ -14,8 +14,8 @@ public class Main {
     public static void main(String[] args) {
         JFrame mainFrame = new JFrame("Gestione aule");
         mainFrame.setLayout(new BorderLayout());
-        mainFrame.setSize(800,720);
-        mainFrame.setMinimumSize(new Dimension(700,610));
+        mainFrame.setSize(900,800);
+        mainFrame.setMinimumSize(new Dimension(800,720));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         ArrayList<Aula> aule = FileIO.loadAule();
