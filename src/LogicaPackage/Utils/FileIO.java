@@ -10,6 +10,7 @@ import UIPackage.Tabella.TabellaAule;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.print.PrinterException;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -84,7 +85,7 @@ public final class FileIO {
     /**
      * Carica le prenotazioni da un file scelto dall'utente
      */
-    public static void caricaPrenotazioni(TabellaAule tabellaAule){
+    public static void loadPrenotazioni(TabellaAule tabellaAule){
         CustomFileChooser fileChooser = new CustomFileChooser();
         fileChooser.setDialogTitle("Carica le prenotazioni");
 
@@ -123,6 +124,17 @@ public final class FileIO {
             }
         } else {
             System.out.println("Operazione annullata dall'utente.");
+        }
+    }
+
+    /**
+     * Permette di stampare le prenotazioni visualizzate nella tabella
+     */
+    public static void printPrenotazioni(JTable table){
+        try {
+            table.print();
+        } catch (PrinterException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class TabellaAule extends JPanel implements PrenotazioneListener {
-    public JTable table;
+    private JTable table;
     private LocalDate currentDate;
     private ArrayList<Prenotazione> prenotazioni;
 
@@ -85,6 +85,9 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    public JTable getTable(){
+        return table;
+    }
     public ArrayList<Prenotazione> getPrenotazioni(){
         return prenotazioni;
     }
@@ -128,14 +131,6 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
             for (int col = 1; col < table.getColumnCount(); col++) {
                 table.setValueAt(null, row, col);
             }
-        }
-    }
-
-    public void stampaPrenotazioni() {
-        try {
-            table.print();
-        } catch (PrinterException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -20,14 +20,36 @@ public class Intestazione extends JPanel {
         setBackground(Color.LIGHT_GRAY);
         setBorder(new EmptyBorder(5,5,5,5));
 
-        // Sezione stampa
-        JPanel printPanel = new JPanel();
-        printPanel.setBackground(Color.LIGHT_GRAY);
-        JButton printButton = new JButton("Stampa prenotazioni");
-        printButton.addActionListener(e -> tabellaAule.stampaPrenotazioni());
-        printPanel.add(printButton);
+        add(createSelectDatePanel(), BorderLayout.WEST);
+        add(createCTAPanel(),BorderLayout.EAST);
+    }
 
-        // Sezione modifica data
+    /**
+     * Crea il pannello contenente i tre pulsanti per interagire con le prenotazioni della tabella
+     * @return
+     */
+    private JPanel createCTAPanel() {
+        JPanel ctaPanel = new JPanel();
+        ctaPanel.setBackground(Color.LIGHT_GRAY);
+        JButton saveButton = new JButton("Salva prenotazioni");
+        JButton loadButton = new JButton("Carica prenotazioni");
+        JButton printButton = new JButton("Stampa prenotazioni");
+
+        saveButton.addActionListener(e -> FileIO.savePrenotazioni(tabellaAule.getPrenotazioni()));
+        loadButton.addActionListener(e -> FileIO.loadPrenotazioni(tabellaAule));
+        printButton.addActionListener(e -> FileIO.printPrenotazioni(tabellaAule.getTable()));
+
+        ctaPanel.add(printButton);
+        ctaPanel.add(saveButton);
+        ctaPanel.add(loadButton);
+        return ctaPanel;
+    }
+
+    /**
+     * Crea il pannello contenente il selettore della data per modificare le prenotazioni visualizzate nella tabella
+     * @return
+     */
+    private JPanel createSelectDatePanel(){
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         datePanel.setBackground(Color.LIGHT_GRAY);
 
@@ -46,22 +68,9 @@ public class Intestazione extends JPanel {
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             tabellaAule.setCurrentDate(localDateSelected);
         });
+        
+        datePanel.add(new JLabel("Data:"));
         datePanel.add(dateSpinner);
-
-        // Sezione CTA
-        JPanel ctaPanel = new JPanel();
-        ctaPanel.setBackground(Color.LIGHT_GRAY);
-        JButton saveButton = new JButton("Salva");
-        JButton loadButton = new JButton("Carica");
-
-        saveButton.addActionListener(e -> FileIO.savePrenotazioni(tabellaAule.getPrenotazioni()));
-        loadButton.addActionListener(e -> FileIO.caricaPrenotazioni(tabellaAule));
-
-        ctaPanel.add(saveButton);
-        ctaPanel.add(loadButton);
-
-        add(printPanel, BorderLayout.WEST);
-        add(datePanel, BorderLayout.CENTER);
-        add(ctaPanel,BorderLayout.EAST);
+        return datePanel;
     }
 }
