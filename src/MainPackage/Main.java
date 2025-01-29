@@ -18,8 +18,7 @@ public class Main {
         mainFrame.setMinimumSize(new Dimension(800,720));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        ArrayList<Aula> aule = FileIO.loadAule();
-        TabellaAule tabellaAule = new TabellaAule(aule);
+        TabellaAule tabellaAule = new TabellaAule();
         Intestazione intestazione = new Intestazione(tabellaAule);
 
         mainFrame.add(intestazione, BorderLayout.NORTH);

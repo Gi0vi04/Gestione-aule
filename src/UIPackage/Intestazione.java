@@ -66,7 +66,7 @@ public class Intestazione extends JPanel {
         dateSpinner.addChangeListener(e -> {
             Date dateSelected = (Date) dateSpinner.getValue();
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            tabellaAule.setCurrentDate(localDateSelected);
+            tabellaAule.setSelectedDate(localDateSelected);
         });
         
         datePanel.add(new JLabel("Data:"));

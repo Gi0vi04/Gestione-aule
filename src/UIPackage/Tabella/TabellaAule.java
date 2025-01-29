@@ -3,31 +3,30 @@ package UIPackage.Tabella;
 import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
 //import UIPackage.Tabella.GestionePrenotazione.ModificaPrenotazione;
+import LogicaPackage.Utils.FileIO;
 import UIPackage.Tabella.GestionePrenotazione.NuovaPrenotazione;
 import UIPackage.Tabella.GestionePrenotazione.PrenotazioneListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.print.PrinterException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class TabellaAule extends JPanel implements PrenotazioneListener {
-    private JTable table;
-    private LocalDate currentDate;
+    private final JTable table;
+    private final ArrayList<Aula> aule;
     private ArrayList<Prenotazione> prenotazioni;
+    private LocalDate selectedDate;
 
-    public TabellaAule(ArrayList<Aula> aule) {
+    public TabellaAule() {
         setLayout(new BorderLayout());
-        this.prenotazioni = new ArrayList<>();
-        this.currentDate = LocalDate.now();
+        aule = FileIO.loadAule();
+        prenotazioni = new ArrayList<>();
+        selectedDate = LocalDate.now();
 
-        // Imposto la tabella
         table = new JTable(new TableModel(aule));
-        // Applicazione del renderer personalizzato a tutte le colonne
-        table.setShowGrid(false);
         CellRenderer cellRenderer = new CellRenderer();
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
@@ -36,14 +35,10 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         table.getColumnModel().getColumn(0).setMinWidth(100);
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
         table.getColumnModel().getColumn(0).setMaxWidth(100);
-        // Imposto l'altezza delle righe
-        table.setRowHeight(25);
-        table.setAlignmentX(CENTER_ALIGNMENT);
-        table.setFillsViewportHeight(true);
+        // Imposto la selezione sulle singole celle
         table.setRowSelectionAllowed(false);
         table.setCellSelectionEnabled(true);
-        // Configura il ridimensionamento delle colonne
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
         // Aggiungo un listener per aprire un frame al clic su una cella
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -51,11 +46,11 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
                 int row = table.getSelectedRow();
                 int column = table.getSelectedColumn();
 
-                if(column == 0 || currentDate.isBefore(LocalDate.now())) return;
+                if(column == 0 || selectedDate.isBefore(LocalDate.now())) return;
 
                 Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
                 if(prenotazione == null){
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, currentDate, prenotazioni, aule);
+                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, selectedDate, prenotazioni, aule);
                     nuovaPrenotazione.setVisible(true);
                 }
 //                else{
@@ -64,7 +59,10 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
 //                }
             }
         });
+
         // Aggiungo un ComponentListener alla tabella per gestire il ridimensionamento
+        table.setFillsViewportHeight(true);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -73,10 +71,7 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
                 int headerHeight = table.getTableHeader().getHeight();
                 int rowCount = table.getRowCount();
 
-                // Sottrai l'altezza dell'header e dividi per il numero di righe
                 int newRowHeight = (height - headerHeight) / rowCount;
-
-                // Imposta la nuova altezza (con un minimo di 50 pixel)
                 table.setRowHeight(Math.max(30, newRowHeight));
             }
         });
@@ -91,42 +86,46 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
     public ArrayList<Prenotazione> getPrenotazioni(){
         return prenotazioni;
     }
-    public LocalDate getCurrentDate(){
-        return currentDate;
+    public LocalDate getSelectedDate(){
+        return selectedDate;
     }
 
     public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
-    public void setCurrentDate(LocalDate currentDate) {
-        this.currentDate = currentDate;
-
-        clearTable();
-        refreshTable(0);
+    public void setSelectedDate(LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
+        refreshTable(true);
     }
 
-    public void refreshTable(int start){
+    /**
+     * Aggiorna la tabella inserendo le prenotazioni presenti
+     */
+    public void refreshTable(boolean clearTable){
         LocalTime referenceTime = LocalTime.parse("08:00");
 
-        for(int i = start; i < prenotazioni.size(); i++){
-            Prenotazione prenotazione = prenotazioni.get(i);
+        if(clearTable) clearTable();
 
-            if(prenotazione.getData().isEqual(getCurrentDate())){
+        for (Prenotazione prenotazione : prenotazioni) {
+            if (prenotazione.getData().isEqual(getSelectedDate())) {
+                Aula aula = prenotazione.getAula();
                 // Calcolo la riga di inizio e di fine
                 LocalTime startTime = prenotazione.getOraInizio();
                 LocalTime endTime = prenotazione.getOraFine();
-
-                int difference = endTime.getHour() - startTime.getHour();
                 int startRow = startTime.getHour() - referenceTime.getHour();
+                int endRow = startRow + (endTime.getHour() - startTime.getHour());
 
-                for(int j = startRow; j < startRow + difference; j++){
-                    table.setValueAt(prenotazione, j, prenotazione.getAula().getNumeroAula());
+                for (int row = startRow; row < endRow; row++) {
+                    table.setValueAt(prenotazione, row, aula.getNumeroAula());
                 }
             }
         }
     }
 
-    public void clearTable() {
+    /**
+     * Svuota la tabella rimuovendo tutte le prenotazioni presenti
+     */
+    private void clearTable() {
         for (int row = 0; row < table.getRowCount(); row++) {
             for (int col = 1; col < table.getColumnCount(); col++) {
                 table.setValueAt(null, row, col);
@@ -134,25 +133,31 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         }
     }
 
+    /**
+     * Aggiunge la prenotazione al vettore delle prenotazioni e aggiorna la tabella
+     * @param prenotazione la prenotazione da aggiungere
+     */
     @Override
     public void addPrenotazione(Prenotazione prenotazione) {
-        int nextStart = prenotazioni.size();
-
         prenotazioni.add(prenotazione);
-        refreshTable(nextStart);
+        refreshTable(false);
     }
 
+    /**
+     * Modifica la vecchia prenotazione sostituendola con quella nuova
+     * @param vecchiaPrenotazione prenotazione da sostituire
+     * @param nuovaPrenotazione prenotazione modificata
+     */
     @Override
     public void editPrenotazione(Prenotazione vecchiaPrenotazione, Prenotazione nuovaPrenotazione) {
-        prenotazioni.set(prenotazioni.indexOf(vecchiaPrenotazione), nuovaPrenotazione);
-        clearTable();
-        refreshTable(0);
+        int indexVecchiaPrenotazione = prenotazioni.indexOf(vecchiaPrenotazione);
+        prenotazioni.set(indexVecchiaPrenotazione, nuovaPrenotazione);
+        refreshTable(true);
     }
 
     @Override
     public void removePrenotazione(Prenotazione prenotazione) {
         prenotazioni.remove(prenotazione);
-        clearTable();
-        refreshTable(0);
+        refreshTable(true);
     }
 }

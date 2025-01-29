@@ -14,8 +14,8 @@ public class TableModel extends AbstractTableModel {
      * @param aule aule da stampare sulla riga di intestazione
      */
     public TableModel(ArrayList<Aula> aule){
-        // Aggiungo una colonna per l'orario
-        columnNames = new String[aule.size() + 1];
+        int columnCount = aule.size() + 1; // Aggiungo una colonna per l'orario
+        columnNames = new String[columnCount];
         data = new Object[10][columnNames.length];
 
         columnNames[0] = "Orario";

@@ -119,8 +119,7 @@ public final class FileIO {
             catch (ClassNotFoundException | IOException e) { new CustomDialog("Caricamento delle prenotazioni", "Errore durante il caricamento delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state caricate."); }
             finally {
                 tabellaAule.setPrenotazioni(prenotazioniCaricate);
-                tabellaAule.clearTable();
-                tabellaAule.refreshTable(0);
+                tabellaAule.refreshTable(true);
             }
         } else {
             System.out.println("Operazione annullata dall'utente.");
