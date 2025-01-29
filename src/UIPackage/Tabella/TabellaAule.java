@@ -50,7 +50,7 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
 
                 Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
                 if(prenotazione == null){
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, TabellaAule.this, selectedDate, prenotazioni, aule);
+                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaAule.this);
                     nuovaPrenotazione.setVisible(true);
                 }
 //                else{
