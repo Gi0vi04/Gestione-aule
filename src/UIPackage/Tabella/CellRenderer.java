@@ -5,11 +5,8 @@ import LogicaPackage.Utils.Costanti;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.time.LocalTime;
 
 public class CellRenderer extends JPanel implements TableCellRenderer {
     public CellRenderer() {

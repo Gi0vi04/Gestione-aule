@@ -31,13 +31,14 @@ public final class Costanti {
             LocalTime.of(18, 0)
     ));
     public static final String[] MOTIVAZIONI = {
-            "Lezione", "Esame", "Tutorato", "Ricevimento"
+            "Lezione", "Esame", "Tutorato", "Ricevimento", "Conferenza"
     };
     public static final Map<String, Color> COLORI_MOTIVAZIONI = Map.of(
-            "Lezione", Color.ORANGE,
-            "Esame", Color.PINK,
-            "Tutorato", Color.CYAN,
-            "Ricevimento", Color.GREEN
+            "Lezione", new Color(0xF6F740),
+            "Esame", new Color(0xFE938C),
+            "Tutorato", new Color(0x08BDBD),
+            "Ricevimento", new Color(0x9CADCE),
+            "Conferenza", new Color(0x0FB37F)
     );
 }
 
