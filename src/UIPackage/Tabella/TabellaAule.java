@@ -4,7 +4,7 @@ import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
 //import UIPackage.Tabella.GestionePrenotazione.ModificaPrenotazione;
 import LogicaPackage.Utils.FileIO;
-import UIPackage.Tabella.GestionePrenotazione.NuovaPrenotazione;
+import UIPackage.Tabella.GestionePrenotazione.GestisciPrenotazione;
 import UIPackage.Tabella.GestionePrenotazione.PrenotazioneListener;
 
 import javax.swing.*;
@@ -50,13 +50,13 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
 
                 Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
                 if(prenotazione == null){
-                    NuovaPrenotazione nuovaPrenotazione = new NuovaPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaAule.this);
+                    GestisciPrenotazione nuovaPrenotazione = new GestisciPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaAule.this);
                     nuovaPrenotazione.setVisible(true);
                 }
-//                else{
-//                    ModificaPrenotazione modificaPrenotazione = new ModificaPrenotazione(prenotazione, TabellaAule.this, aule);
-//                    modificaPrenotazione.setVisible(true);
-//                }
+                else{
+                    GestisciPrenotazione modificaPrenotazione = new GestisciPrenotazione(prenotazioni, aule.toArray(new Aula[0]), TabellaAule.this, prenotazione);
+                    modificaPrenotazione.setVisible(true);
+                }
             }
         });
 

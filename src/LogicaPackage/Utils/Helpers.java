@@ -18,12 +18,13 @@ public final class Helpers {
      * @param prenotazioni lista delle prenotazioni
      * @param selectedAula aula selezionata
      * @param selectedDate data selezionata
+     * @param selectedPrenotazione se sto modificando una prenotazione sarà diverso da NULL e conterò pure gli orari di questa prenotazione
      * @return lista degli orari di inizio disponibili
      */
-    public static ArrayList<LocalTime> calcolaOrariInizioDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate){
+    public static ArrayList<LocalTime> calcolaOrariInizioDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate, Prenotazione selectedPrenotazione){
         ArrayList<LocalTime> orariOccupati = new ArrayList<>();
         for (Prenotazione prenotazione : prenotazioni) {
-            if (prenotazione.getData().isEqual(selectedDate) && prenotazione.getAula().getNumeroAula() == selectedAula.getNumeroAula()) {
+            if (prenotazione.getData().isEqual(selectedDate) && prenotazione.getAula().getNumeroAula() == selectedAula.getNumeroAula() && !prenotazione.equals(selectedPrenotazione)) {
                 LocalTime orarioInizio = prenotazione.getOraInizio();
                 LocalTime orarioFine = prenotazione.getOraFine();
 
@@ -47,15 +48,16 @@ public final class Helpers {
      * @param selectedAula aula selezionata
      * @param selectedDate data selezionata
      * @param selectedOraInizio orario di inizio selezionato
+     * @param selectedPrenotazione se sto modificando una prenotazione sarà diverso da NULL e conterò pure gli orari di questa prenotazione
      * @return lista degli orari di fine disponibili
      */
-    public static ArrayList<LocalTime> calcolaOrariFineDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate, LocalTime selectedOraInizio) {
+    public static ArrayList<LocalTime> calcolaOrariFineDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate, LocalTime selectedOraInizio, Prenotazione selectedPrenotazione) {
         int hoursInterval = selectedAula.getTipologia().equals(Costanti.DIDATTICA) ? 1 : 2;
         int maxDuration = selectedAula.getTipologia().equals(Costanti.DIDATTICA) ? 8 : 4;
 
         LocalTime maxOrarioFine = LocalTime.of(19, 0); // Imposto 19:00 perchè userò isBefore
         for (Prenotazione prenotazione : prenotazioni) {
-            if (prenotazione.getData().isEqual(selectedDate) && prenotazione.getAula().getNumeroAula() == selectedAula.getNumeroAula()) {
+            if (prenotazione.getData().isEqual(selectedDate) && prenotazione.getAula().getNumeroAula() == selectedAula.getNumeroAula() && !prenotazione.equals(selectedPrenotazione)) {
                 LocalTime orarioPossibileFine = prenotazione.getOraInizio().plusHours(1); // Aggiungo un'ora perchè usero isBefore
                 if (orarioPossibileFine.isAfter(selectedOraInizio) && orarioPossibileFine.isBefore(maxOrarioFine)) // Aggiungo un'ora perchè userò isBefore
                     maxOrarioFine = orarioPossibileFine;

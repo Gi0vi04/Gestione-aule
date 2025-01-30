@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
-public class NuovaPrenotazione extends JFrame {
+public class GestisciPrenotazione extends JFrame {
     private String selectedNome;
     private Aula selectedAula;
     private String selectedMotivazione;
@@ -26,12 +26,13 @@ public class NuovaPrenotazione extends JFrame {
     private final ArrayList<Prenotazione> prenotazioni;
     private final Aula[] aule;
     private final PrenotazioneListener prenotazioneListener;
+    private final Prenotazione selectedPrenotazione;
 
     private JComboBox<LocalTime> oraInizioCombo;
     private JComboBox<LocalTime> oraFineCombo;
-    private final JButton buttonConferma;
+    private final JButton buttonSubmit;
 
-    public NuovaPrenotazione(int row, int column, LocalDate selectedDate, ArrayList<Prenotazione> prenotazioni, Aula[] aule, PrenotazioneListener prenotazioneListener) {
+    public GestisciPrenotazione(int row, int column, LocalDate selectedDate, ArrayList<Prenotazione> prenotazioni, Aula[] aule, PrenotazioneListener prenotazioneListener) {
         super("Nuova prenotazione");
         setResizable(false);
         // Inizializzo lo stato del frame
@@ -45,15 +46,49 @@ public class NuovaPrenotazione extends JFrame {
         this.prenotazioni = prenotazioni;
         this.aule = aule;
         this.prenotazioneListener = prenotazioneListener;
+        this.selectedPrenotazione = null;
 
-        this.buttonConferma = new JButton("Conferma");
+        this.buttonSubmit = new JButton("Conferma");
 
         // Creo il mainPanel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        mainPanel.add(createHeaderPanel(), BorderLayout.NORTH);
+        mainPanel.add(createHeaderPanel("Crea una nuova prenotazione", "Compila i campi per creare una nuova prenotazione"), BorderLayout.NORTH);
         mainPanel.add(createFormPanel(), BorderLayout.CENTER);
-        mainPanel.add(createFooterPanel(), BorderLayout.SOUTH);
+        mainPanel.add(createNuovaPrenotazioneFooterPanel(), BorderLayout.SOUTH);
+        add(mainPanel);
+
+        pack();
+        setMinimumSize(new Dimension(300, getHeight()));
+        // Evita che il JTextField prenda il focus iniziale
+        SwingUtilities.invokeLater(this::requestFocusInWindow);
+
+        super.setLocationRelativeTo(null);
+    }
+    public GestisciPrenotazione(ArrayList<Prenotazione> prenotazioni, Aula[] aule, PrenotazioneListener prenotazioneListener, Prenotazione selectedPrenotazione) {
+        super("Modifica prenotazione");
+        setResizable(false);
+        // Inizializzo lo stato del frame
+        this.selectedNome = selectedPrenotazione.getNome();
+        this.selectedAula = selectedPrenotazione.getAula();
+        this.selectedMotivazione = selectedPrenotazione.getMotivazione();
+        this.selectedDate = selectedPrenotazione.getData();
+        this.selectedOraInizio = selectedPrenotazione.getOraInizio();
+        this.selectedOraFine = selectedPrenotazione.getOraFine();
+
+        this.prenotazioni = prenotazioni;
+        this.aule = aule;
+        this.prenotazioneListener = prenotazioneListener;
+        this.selectedPrenotazione = selectedPrenotazione;
+
+        this.buttonSubmit = new JButton("Modifica");
+
+        // Creo il mainPanel
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainPanel.add(createHeaderPanel("Modifica la prenotazione", "Modifica i campi della prenotazione o eliminala"), BorderLayout.NORTH);
+        mainPanel.add(createFormPanel(), BorderLayout.CENTER);
+        mainPanel.add(createModificaPrenotazioneFooter(), BorderLayout.SOUTH);
         add(mainPanel);
 
         pack();
@@ -67,13 +102,13 @@ public class NuovaPrenotazione extends JFrame {
     public void setSelectedNome(String selectedNome){
         this.selectedNome = selectedNome;
 
-        buttonConferma.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
+        buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
     public void setSelectedAula(Aula selectedAula) {
         this.selectedAula = selectedAula;
 
-        updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate));
-        updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio));
+        updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione));
+        updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
     }
     public void setSelectedMotivazione(String selectedMotivazione){
         this.selectedMotivazione = selectedMotivazione;
@@ -81,19 +116,18 @@ public class NuovaPrenotazione extends JFrame {
     public void setSelectedDate(LocalDate selectedDate){
         this.selectedDate = selectedDate;
 
-        updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate));
-        updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio));
+        updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione));
+        updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
     }
     public void setSelectedOraInizio(LocalTime oraInizio) {
         this.selectedOraInizio = oraInizio;
 
-        updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio));
+        updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
     }
     public void setSelectedOraFine(LocalTime oraFine) {
         this.selectedOraFine = oraFine;
     }
     public void updateOraInizioCombo(ArrayList<LocalTime> orariInizioDisponibili){
-        LocalTime selected = (LocalTime) oraInizioCombo.getSelectedItem();
         DefaultComboBoxModel<LocalTime> model = new DefaultComboBoxModel<>();
         model.addAll(orariInizioDisponibili);
 
@@ -102,7 +136,7 @@ public class NuovaPrenotazione extends JFrame {
         if(oraInizioCombo.getItemCount() > 0){
             oraInizioCombo.setEnabled(true);
             // Se possibile mantengo la selezione precedente
-            if(selected != null && orariInizioDisponibili.contains(selected)) oraInizioCombo.setSelectedItem(selected);
+            if(selectedOraInizio != null && orariInizioDisponibili.contains(selectedOraInizio)) oraInizioCombo.setSelectedItem(selectedOraInizio);
             else oraInizioCombo.setSelectedIndex(0);
         }
         else{
@@ -110,10 +144,9 @@ public class NuovaPrenotazione extends JFrame {
             oraInizioCombo.addItem(LocalTime.MIDNIGHT);
         }
 
-        buttonConferma.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
+        buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
     public void updateOraFineCombo(ArrayList<LocalTime> orariFineDisponibili){
-        LocalTime selected = (LocalTime) oraFineCombo.getSelectedItem();
         DefaultComboBoxModel<LocalTime> model = new DefaultComboBoxModel<>();
         model.addAll(orariFineDisponibili);
 
@@ -122,7 +155,7 @@ public class NuovaPrenotazione extends JFrame {
         if(oraFineCombo.getItemCount() > 0 && oraInizioCombo.isEnabled()){
             oraFineCombo.setEnabled(true);
             // Se possibile mantengo la selezione precedente
-            if(selected != null && orariFineDisponibili.contains(selected)) oraFineCombo.setSelectedItem(selected);
+            if(selectedOraFine != null && orariFineDisponibili.contains(selectedOraFine)) oraFineCombo.setSelectedItem(selectedOraFine);
             else oraFineCombo.setSelectedIndex(0);
         }
         else{
@@ -131,15 +164,15 @@ public class NuovaPrenotazione extends JFrame {
             oraFineCombo.addItem(LocalTime.MIDNIGHT);
         }
 
-        buttonConferma.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
+        buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
 
-    private JPanel createHeaderPanel() {
+    private JPanel createHeaderPanel(String titleText, String subtitleText) {
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Crea una prenotazione");
-        JLabel subtitle = new JLabel("Compila i campi per creare una nuova prenotazione");
+        JLabel title = new JLabel(titleText);
+        JLabel subtitle = new JLabel(subtitleText);
         title.setFont(title.getFont().deriveFont(Font.BOLD));
 
         headerPanel.add(title);
@@ -159,11 +192,18 @@ public class NuovaPrenotazione extends JFrame {
         formPanel.add(createOrarioPanel());
         return formPanel;
     }
-    private JPanel createFooterPanel(){
+    private JPanel createNuovaPrenotazioneFooterPanel(){
         JPanel footerPanel = new JPanel();
         footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
 
-        footerPanel.add(createCTAPanel());
+        footerPanel.add(createNuovaPrenotazioneCTAPanel());
+        return footerPanel;
+    }
+    private JPanel createModificaPrenotazioneFooter() {
+        JPanel footerPanel = new JPanel();
+        footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
+
+        footerPanel.add(createModificaPrenotazioneCTAPanel());
         return footerPanel;
     }
 
@@ -209,8 +249,8 @@ public class NuovaPrenotazione extends JFrame {
         JPanel orarioPanel = new JPanel();
         orarioPanel.setLayout(new BoxLayout(orarioPanel, BoxLayout.X_AXIS));
 
-        LocalTime[] orariInizioDisponibili = Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate).toArray(new LocalTime[0]);
-        LocalTime[] orariFineDisponibili = Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio).toArray(new LocalTime[0]);
+        LocalTime[] orariInizioDisponibili = Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione).toArray(new LocalTime[0]);
+        LocalTime[] orariFineDisponibili = Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione).toArray(new LocalTime[0]);
 
         oraInizioCombo = new JComboBox<>(orariInizioDisponibili);
         oraFineCombo = new JComboBox<>(orariFineDisponibili);
@@ -222,14 +262,14 @@ public class NuovaPrenotazione extends JFrame {
         orarioPanel.add(oraFineCombo);
         return orarioPanel;
     }
-    private JPanel createCTAPanel() {
+    private JPanel createNuovaPrenotazioneCTAPanel() {
         JPanel ctaPanel = new JPanel(new BorderLayout());
 
         JButton buttonAnnulla = new JButton("Annulla");
         buttonAnnulla.addActionListener(e -> dispose());
 
-        buttonConferma.setEnabled(false);
-        buttonConferma.addActionListener(e -> {
+        buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
+        buttonSubmit.addActionListener(e -> {
             Prenotazione prenotazione = new Prenotazione(selectedNome, selectedAula, selectedMotivazione, selectedDate, selectedOraInizio, selectedOraFine);
             prenotazioneListener.addPrenotazione(prenotazione);
 
@@ -237,7 +277,30 @@ public class NuovaPrenotazione extends JFrame {
         });
 
         ctaPanel.add(buttonAnnulla, BorderLayout.WEST);
-        ctaPanel.add(buttonConferma, BorderLayout.EAST);
+        ctaPanel.add(buttonSubmit, BorderLayout.EAST);
+        return ctaPanel;
+    }
+    private JPanel createModificaPrenotazioneCTAPanel() {
+        JPanel ctaPanel = new JPanel(new BorderLayout());
+
+        JButton buttonDelete = new JButton("Elimina");
+        buttonDelete.setForeground(Color.RED);
+        buttonDelete.addActionListener(e -> {
+            prenotazioneListener.removePrenotazione(selectedPrenotazione);
+
+            dispose();
+        });
+
+        buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
+        buttonSubmit.addActionListener(e -> {
+            Prenotazione nuovaPrenotazione = new Prenotazione(selectedNome, selectedAula, selectedMotivazione, selectedDate, selectedOraInizio, selectedOraFine);
+            prenotazioneListener.editPrenotazione(selectedPrenotazione, nuovaPrenotazione);
+
+            dispose();
+        });
+
+        ctaPanel.add(buttonDelete, BorderLayout.WEST);
+        ctaPanel.add(buttonSubmit, BorderLayout.EAST);
         return ctaPanel;
     }
 }
