@@ -67,7 +67,7 @@ public final class FileIO {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
 
-            FileOutputStream fileOutputStream = null;
+            FileOutputStream fileOutputStream;
             try {
                 if(!fileToSave.getName().endsWith(".prenotazioni")) fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile() + ".prenotazioni");
                 else fileOutputStream = new FileOutputStream(fileToSave.getAbsoluteFile());
@@ -103,7 +103,7 @@ public final class FileIO {
             }
 
             ArrayList<Prenotazione> prenotazioniCaricate = new ArrayList<>();
-            FileInputStream fileInputStream = null;
+            FileInputStream fileInputStream;
             try {
                 fileInputStream = new FileInputStream(fileToLoad.getAbsoluteFile());
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

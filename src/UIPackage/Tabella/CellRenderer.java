@@ -51,11 +51,14 @@ public class CellRenderer extends JPanel implements TableCellRenderer {
 
             JLabel nomeLabel = new JLabel(prenotazione.getNome());
             JLabel motivazioneLabel = new JLabel(prenotazione.getMotivazione());
+            JLabel orarioLabel = new JLabel(prenotazione.getOraInizio() + " - " + prenotazione.getOraFine());
             nomeLabel.setFont(nomeLabel.getFont().deriveFont(Font.BOLD));
             motivazioneLabel.setFont(nomeLabel.getFont().deriveFont(Font.ITALIC));
+            orarioLabel.setFont(nomeLabel.getFont().deriveFont(Font.ITALIC));
+
             prenotazionePanel.add(nomeLabel);
             prenotazionePanel.add(motivazioneLabel);
-
+            prenotazionePanel.add(orarioLabel);
             this.add(prenotazionePanel);
         }
 

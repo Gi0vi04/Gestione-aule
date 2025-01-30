@@ -4,7 +4,7 @@ import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
 import LogicaPackage.Utils.Costanti;
 import LogicaPackage.Utils.Helpers;
-import LogicaPackage.Utils.SimpleDocumentListener;
+import LogicaPackage.Utils.CustomDocumentListener;
 import UIPackage.CustomUI.CustomTextField;
 
 import javax.swing.*;
@@ -211,7 +211,7 @@ public class GestisciPrenotazione extends JFrame {
         CustomTextField nomeTextField = new CustomTextField("Inserire il nome");
         nomeTextField.setText(selectedNome);
 
-        nomeTextField.getDocument().addDocumentListener((SimpleDocumentListener) e -> setSelectedNome(nomeTextField.getText()));
+        nomeTextField.getDocument().addDocumentListener((CustomDocumentListener) e -> setSelectedNome(nomeTextField.getText()));
         return nomeTextField;
     }
     private JComboBox<Aula> createAulaComboBox() {
