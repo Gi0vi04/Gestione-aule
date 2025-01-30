@@ -13,14 +13,19 @@ public final class Helpers {
         throw new UnsupportedOperationException("Questa è una classe di utility e non può essere istanziata.");
     }
 
+    /**
+     * Calcola tutti i possibili orari di inizio disponibili
+     * @param prenotazioni lista delle prenotazioni
+     * @param selectedAula aula selezionata
+     * @param selectedDate data selezionata
+     * @return lista degli orari di inizio disponibili
+     */
     public static ArrayList<LocalTime> calcolaOrariInizioDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate){
         ArrayList<LocalTime> orariOccupati = new ArrayList<>();
         for (Prenotazione prenotazione : prenotazioni) {
             if (prenotazione.getData().isEqual(selectedDate) && prenotazione.getAula().getNumeroAula() == selectedAula.getNumeroAula()) {
                 LocalTime orarioInizio = prenotazione.getOraInizio();
                 LocalTime orarioFine = prenotazione.getOraFine();
-
-                if(prenotazione.getAula().getTipologia().equals(Costanti.LABORATORIO)) orarioInizio = orarioInizio.minusHours(1); // Tengo l'ora prima non selezionabile come inizio (sono prenotabili a intervalli di 2 ore)
 
                 while (!orarioInizio.equals(orarioFine)) {
                     orariOccupati.add(orarioInizio);
@@ -36,6 +41,14 @@ public final class Helpers {
         return orariInizioDisponibili;
     }
 
+    /**
+     * Calcola tutti i possibili orari di fine disponibili
+     * @param prenotazioni lista delle prenotazioni
+     * @param selectedAula aula selezionata
+     * @param selectedDate data selezionata
+     * @param selectedOraInizio orario di inizio selezionato
+     * @return lista degli orari di fine disponibili
+     */
     public static ArrayList<LocalTime> calcolaOrariFineDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate, LocalTime selectedOraInizio) {
         int hoursInterval = selectedAula.getTipologia().equals(Costanti.DIDATTICA) ? 1 : 2;
         int maxDuration = selectedAula.getTipologia().equals(Costanti.DIDATTICA) ? 8 : 4;
@@ -62,7 +75,14 @@ public final class Helpers {
         return orariFineDisponibili;
     }
 
-    public static boolean isNomeValido(String selectedNome) {
-        return !selectedNome.isEmpty() && selectedNome.matches("[a-zA-Z\\s]+");
+    /**
+     * Controlla se il form di prenotazione è valido e quindi può essere confermato
+     * @param selectedNome nome selezionato
+     * @param orariInizioCombo orari di inizio disponibili
+     * @param orariFineCombo orari di fine disponibili
+     * @return TRUE se il form è valido FALSE altrimenti
+     */
+    public static boolean isFormPrenotazioneValido(String selectedNome, JComboBox<LocalTime> orariInizioCombo, JComboBox<LocalTime> orariFineCombo){
+        return !selectedNome.isEmpty() && selectedNome.matches("[a-zA-Z\\s]+") && orariInizioCombo.isEnabled() && orariFineCombo.isEnabled();
     }
 }

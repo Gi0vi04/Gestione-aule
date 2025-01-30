@@ -29,7 +29,7 @@ public class NuovaPrenotazione extends JFrame {
 
     private JComboBox<LocalTime> oraInizioCombo;
     private JComboBox<LocalTime> oraFineCombo;
-    private JButton buttonConferma;
+    private final JButton buttonConferma;
 
     public NuovaPrenotazione(int row, int column, LocalDate selectedDate, ArrayList<Prenotazione> prenotazioni, Aula[] aule, PrenotazioneListener prenotazioneListener) {
         super("Nuova prenotazione");
@@ -47,11 +47,13 @@ public class NuovaPrenotazione extends JFrame {
         this.prenotazioneListener = prenotazioneListener;
 
         this.buttonConferma = new JButton("Conferma");
+
         // Creo il mainPanel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainPanel.add(createHeaderPanel(), BorderLayout.NORTH);
         mainPanel.add(createFormPanel(), BorderLayout.CENTER);
+        mainPanel.add(createFooterPanel(), BorderLayout.SOUTH);
         add(mainPanel);
 
         pack();
@@ -65,7 +67,7 @@ public class NuovaPrenotazione extends JFrame {
     public void setSelectedNome(String selectedNome){
         this.selectedNome = selectedNome;
 
-        buttonConferma.setEnabled(Helpers.isNomeValido(selectedNome));
+        buttonConferma.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
     public void setSelectedAula(Aula selectedAula) {
         this.selectedAula = selectedAula;
@@ -97,18 +99,39 @@ public class NuovaPrenotazione extends JFrame {
 
         oraInizioCombo.setModel(model);
 
-        if(selected != null && orariInizioDisponibili.contains(selected)) oraInizioCombo.setSelectedItem(selected);
-        else oraInizioCombo.setSelectedIndex(0);
+        if(oraInizioCombo.getItemCount() > 0){
+            oraInizioCombo.setEnabled(true);
+            // Se possibile mantengo la selezione precedente
+            if(selected != null && orariInizioDisponibili.contains(selected)) oraInizioCombo.setSelectedItem(selected);
+            else oraInizioCombo.setSelectedIndex(0);
+        }
+        else{
+            oraInizioCombo.setEnabled(false);
+            oraInizioCombo.addItem(LocalTime.MIDNIGHT);
+        }
+
+        buttonConferma.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
     public void updateOraFineCombo(ArrayList<LocalTime> orariFineDisponibili){
-        LocalTime selected = (LocalTime) oraInizioCombo.getSelectedItem();
+        LocalTime selected = (LocalTime) oraFineCombo.getSelectedItem();
         DefaultComboBoxModel<LocalTime> model = new DefaultComboBoxModel<>();
         model.addAll(orariFineDisponibili);
 
         oraFineCombo.setModel(model);
-        if(selected != null && orariFineDisponibili.contains(selected)) oraFineCombo.setSelectedItem(selected);
-        else if(oraFineCombo.getItemCount() > 0) oraFineCombo.setSelectedIndex(0);
-        else oraFineCombo.setEnabled(false);
+
+        if(oraFineCombo.getItemCount() > 0 && oraInizioCombo.isEnabled()){
+            oraFineCombo.setEnabled(true);
+            // Se possibile mantengo la selezione precedente
+            if(selected != null && orariFineDisponibili.contains(selected)) oraFineCombo.setSelectedItem(selected);
+            else oraFineCombo.setSelectedIndex(0);
+        }
+        else{
+            oraFineCombo.setEnabled(false);
+            oraFineCombo.removeAllItems();
+            oraFineCombo.addItem(LocalTime.MIDNIGHT);
+        }
+
+        buttonConferma.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
 
     private JPanel createHeaderPanel() {
@@ -134,8 +157,14 @@ public class NuovaPrenotazione extends JFrame {
         formPanel.add(createMotivazioneComboBox());
         formPanel.add(createDateSpinner());
         formPanel.add(createOrarioPanel());
-        formPanel.add(createCTAPanel());
         return formPanel;
+    }
+    private JPanel createFooterPanel(){
+        JPanel footerPanel = new JPanel();
+        footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
+
+        footerPanel.add(createCTAPanel());
+        return footerPanel;
     }
 
     private CustomTextField createNomeTextField() {
