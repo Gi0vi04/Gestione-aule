@@ -2,6 +2,7 @@ package MainPackage;
 
 import LogicaPackage.Aula;
 import LogicaPackage.Utils.FileIO;
+import ThreadsPackage.AutoSaveThread;
 import UIPackage.CustomUI.CustomDialog;
 import UIPackage.Intestazione;
 import UIPackage.Tabella.TabellaAule;
@@ -20,6 +21,9 @@ public class Main {
 
         TabellaAule tabellaAule = new TabellaAule();
         Intestazione intestazione = new Intestazione(tabellaAule);
+
+        AutoSaveThread autoSaveThread = new AutoSaveThread(tabellaAule, "autosave.prenotazioni");
+        autoSaveThread.start();
 
         mainFrame.add(intestazione, BorderLayout.NORTH);
         mainFrame.add(tabellaAule, BorderLayout.CENTER);

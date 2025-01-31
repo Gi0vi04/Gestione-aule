@@ -1,4 +1,4 @@
-package LogicaPackage.Utils;
+package UIPackage.Tabella.GestionePrenotazione;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

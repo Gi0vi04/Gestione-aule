@@ -4,7 +4,6 @@ import LogicaPackage.Aula;
 import LogicaPackage.Prenotazione;
 import LogicaPackage.Utils.Costanti;
 import LogicaPackage.Utils.Helpers;
-import LogicaPackage.Utils.CustomDocumentListener;
 import UIPackage.CustomUI.CustomTextField;
 
 import javax.swing.*;
