@@ -5,23 +5,23 @@ import java.io.Serializable;
 /**
  * Classe destinata a generalizzare l'aula didattica e l'aula laboratorio
  */
-public class Aula implements Serializable {
+public abstract class Aula implements Serializable {
     /**
      * Variabile che contiene il nome dell'aula
      */
-    private String nomeAula;
+    private final String nomeAula;
     /**
      * Variabile che contiene la tipologia dell'aula
      */
-    private String tipologia;
+    private final String tipologia;
     /**
      * Variabile che contiene il numero dell'aula
      */
-    private int numeroAula;
+    private final int numeroAula;
     /**
      * Variabile che contiene la capienza dell'aula
      */
-    private int capienza;
+    private final int capienza;
 
     public Aula(int numeroAula, String nomeAula, String tipologia, int capienza){
         this.numeroAula = numeroAula;

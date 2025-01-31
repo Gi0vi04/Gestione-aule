@@ -88,6 +88,6 @@ public final class Helpers {
      * @return TRUE se il form è valido FALSE altrimenti
      */
     public static boolean isFormPrenotazioneValido(String selectedNome, JComboBox<LocalTime> orariInizioCombo, JComboBox<LocalTime> orariFineCombo){
-        return !selectedNome.isEmpty() && selectedNome.matches("[a-zA-Z\\s]+") && orariInizioCombo.isEnabled() && orariFineCombo.isEnabled();
+        return !selectedNome.isEmpty() && orariInizioCombo.isEnabled() && orariFineCombo.isEnabled();
     }
 }
