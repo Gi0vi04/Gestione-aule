@@ -44,9 +44,9 @@ public final class FileIO {
             }
             reader.close();
         } catch (FileNotFoundException e) {
-            System.err.println("Errore. File non trovato.");
+            System.err.println("[CARICAMENTO AULE]: Errore. File non trovato.");
         } catch (IOException e) {
-            System.err.println("Errore durante l'acquisizione dell'input.");
+            System.err.println("[CARICAMENTO AULE]: Errore durante l'acquisizione dell'input.");
         }
 
         return aule;
@@ -78,7 +78,7 @@ public final class FileIO {
             catch (IOException e) { new CustomDialog("Salvataggio delle prenotazioni", "Errore durante il salvataggio delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state salvate."); }
             finally { new CustomDialog("Salvataggio delle prenotazioni", "Salvataggio avvenuto con successo", "Le tue prenotazioni sono state salvate correttamente."); }
         } else {
-            System.out.println("Operazione annullata dall'utente.");
+            System.out.println("[SALVATAGGIO PRENOTAZIONI]: Operazione annullata dall'utente.");
         }
     }
 
@@ -122,7 +122,7 @@ public final class FileIO {
                 tabellaAule.refreshTable(true);
             }
         } else {
-            System.out.println("Operazione annullata dall'utente.");
+            System.out.println("[CARICAMENTO PRENOTAZIONI]: Operazione annullata dall'utente.");
         }
     }
 

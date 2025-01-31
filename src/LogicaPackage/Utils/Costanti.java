@@ -41,5 +41,6 @@ public final class Costanti {
             "Lauree", new Color(0xF55929),
             "Conferenza", new Color(0x0FB37F)
     );
+    public static final String AUTOSAVE_PATH = "autosave.prenotazioni";
 }
 

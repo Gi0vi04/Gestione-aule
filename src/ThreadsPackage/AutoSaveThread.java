@@ -39,7 +39,7 @@ public class AutoSaveThread extends Thread {
             throw new RuntimeException(e);
         }
         finally {
-            System.out.println("Salvataggio automatico avvenuto con successo.");
+            System.out.println("[SALVATAGGIO AUTOMATICO]: Salvataggio automatico avvenuto con successo.");
         }
     }
 }
