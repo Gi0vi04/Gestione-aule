@@ -6,7 +6,7 @@ import LogicaPackage.Laboratorio;
 import LogicaPackage.Prenotazione;
 import UIPackage.CustomUI.CustomFileChooser;
 import UIPackage.CustomUI.CustomDialog;
-import UIPackage.Tabella.TabellaAule;
+import UIPackage.Tabella.TabellaPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -89,7 +89,7 @@ public final class FileIO {
     /**
      * Carica le prenotazioni da un file scelto dall'utente
      */
-    public static void loadPrenotazioni(TabellaAule tabellaAule){
+    public static void loadPrenotazioni(TabellaPrenotazioni tabellaPrenotazioni){
         CustomFileChooser fileChooser = new CustomFileChooser();
         fileChooser.setDialogTitle("Carica le prenotazioni");
 
@@ -122,8 +122,8 @@ public final class FileIO {
             }
             catch (ClassNotFoundException | IOException e) { new CustomDialog("Caricamento delle prenotazioni", "Errore durante il caricamento delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state caricate."); }
             finally {
-                tabellaAule.setPrenotazioni(prenotazioniCaricate);
-                tabellaAule.refreshTable(true);
+                tabellaPrenotazioni.setPrenotazioni(prenotazioniCaricate);
+                tabellaPrenotazioni.refreshTable(true);
             }
         } else {
             System.out.println("[CARICAMENTO PRENOTAZIONI]: Operazione annullata dall'utente.");

@@ -3,6 +3,9 @@ package UIPackage.CustomUI;
 import javax.swing.*;
 import java.io.File;
 
+/**
+ * Classe destinata a estendere il semplice JFileChooser per supportare la sovrascrizione del file
+ */
 public class CustomFileChooser extends JFileChooser {
     @Override
     public void approveSelection() {

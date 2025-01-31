@@ -5,14 +5,13 @@ import LogicaPackage.Aula;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
+/**
+ * Classe destinata a realizzare il modello della tabella delle prenotazioni
+ */
 public class TableModel extends AbstractTableModel {
     private final String[] columnNames;
     private final Object[][] data;
 
-    /**
-     *
-     * @param aule aule da stampare sulla riga di intestazione
-     */
     public TableModel(ArrayList<Aula> aule){
         int columnCount = aule.size() + 1; // Aggiungo una colonna per l'orario
         columnNames = new String[columnCount];

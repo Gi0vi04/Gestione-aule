@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+/**
+ * Classe destinata a mantenere funzioni di aiuto come conversioni o calcoli specifici utilizzati in più parti del software
+ */
 public final class Helpers {
     private Helpers() {
         throw new UnsupportedOperationException("Questa è una classe di utility e non può essere istanziata.");

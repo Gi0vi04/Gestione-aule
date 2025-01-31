@@ -14,13 +14,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class TabellaAule extends JPanel implements PrenotazioneListener {
+/**
+ * Classe destinata alla realizzazione dell'interfaccia della tabella delle prenotazioni
+ */
+public class TabellaPrenotazioni extends JPanel implements PrenotazioneListener {
     private final JTable table;
     private final ArrayList<Aula> aule;
     private ArrayList<Prenotazione> prenotazioni;
     private LocalDate selectedDate;
 
-    public TabellaAule() {
+    public TabellaPrenotazioni() {
         setLayout(new BorderLayout());
         aule = FileIO.loadAule();
         prenotazioni = new ArrayList<>();
@@ -50,11 +53,11 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
 
                 Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
                 if(prenotazione == null){
-                    GestisciPrenotazione nuovaPrenotazione = new GestisciPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaAule.this);
+                    GestisciPrenotazione nuovaPrenotazione = new GestisciPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaPrenotazioni.this);
                     nuovaPrenotazione.setVisible(true);
                 }
                 else{
-                    GestisciPrenotazione modificaPrenotazione = new GestisciPrenotazione(prenotazioni, aule.toArray(new Aula[0]), TabellaAule.this, prenotazione);
+                    GestisciPrenotazione modificaPrenotazione = new GestisciPrenotazione(prenotazioni, aule.toArray(new Aula[0]), TabellaPrenotazioni.this, prenotazione);
                     modificaPrenotazione.setVisible(true);
                 }
             }
@@ -155,6 +158,10 @@ public class TabellaAule extends JPanel implements PrenotazioneListener {
         refreshTable(true);
     }
 
+    /**
+     * Elimina la prenotazione dalla lista delle prenotazioni
+     * @param prenotazione prenotazione da rimuovere
+     */
     @Override
     public void removePrenotazione(Prenotazione prenotazione) {
         prenotazioni.remove(prenotazione);

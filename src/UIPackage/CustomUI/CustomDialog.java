@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * Classe destinata a mostrare un pop-up di dialogo.
+ */
 public class CustomDialog extends JDialog {
     public CustomDialog(String title, String subtitle, String text) {
         super();

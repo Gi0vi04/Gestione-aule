@@ -1,16 +1,12 @@
 package MainPackage;
 
-import LogicaPackage.Aula;
 import LogicaPackage.Utils.Costanti;
-import LogicaPackage.Utils.FileIO;
 import ThreadsPackage.AutoSaveThread;
-import UIPackage.CustomUI.CustomDialog;
 import UIPackage.Intestazione;
-import UIPackage.Tabella.TabellaAule;
+import UIPackage.Tabella.TabellaPrenotazioni;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,14 +16,14 @@ public class Main {
         mainFrame.setMinimumSize(new Dimension(800,720));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TabellaAule tabellaAule = new TabellaAule();
-        Intestazione intestazione = new Intestazione(tabellaAule);
+        TabellaPrenotazioni tabellaPrenotazioni = new TabellaPrenotazioni();
+        Intestazione intestazione = new Intestazione(tabellaPrenotazioni);
 
-        AutoSaveThread autoSaveThread = new AutoSaveThread(tabellaAule, Costanti.AUTOSAVE_PATH);
+        AutoSaveThread autoSaveThread = new AutoSaveThread(tabellaPrenotazioni, Costanti.AUTOSAVE_PATH);
         autoSaveThread.start();
 
         mainFrame.add(intestazione, BorderLayout.NORTH);
-        mainFrame.add(tabellaAule, BorderLayout.CENTER);
+        mainFrame.add(tabellaPrenotazioni, BorderLayout.CENTER);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
     }

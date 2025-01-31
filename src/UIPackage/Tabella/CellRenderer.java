@@ -8,6 +8,9 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+/**
+ * Classe destinata al rendering della cella della tabella, supportando la modifica del colore e delle informazioni stampate
+ */
 public class CellRenderer extends JPanel implements TableCellRenderer {
     public CellRenderer() {
         super();

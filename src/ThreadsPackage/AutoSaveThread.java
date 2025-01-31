@@ -1,17 +1,20 @@
 package ThreadsPackage;
 
 import LogicaPackage.Prenotazione;
-import UIPackage.Tabella.TabellaAule;
+import UIPackage.Tabella.TabellaPrenotazioni;
 
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Class destinata a gestire il Thread del salvataggio automatico
+ */
 public class AutoSaveThread extends Thread {
-    private final TabellaAule tabellaAule;
+    private final TabellaPrenotazioni tabellaPrenotazioni;
     private final String filePath;
 
-    public AutoSaveThread(TabellaAule tabellaAule, String filePath) {
-        this.tabellaAule = tabellaAule;
+    public AutoSaveThread(TabellaPrenotazioni tabellaPrenotazioni, String filePath) {
+        this.tabellaPrenotazioni = tabellaPrenotazioni;
         this.filePath = filePath;
     }
 
@@ -20,7 +23,7 @@ public class AutoSaveThread extends Thread {
         while (true) {
             try {
                 Thread.sleep(10000);
-                savePrenotazioni(tabellaAule.getPrenotazioni());
+                savePrenotazioni(tabellaPrenotazioni.getPrenotazioni());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
@@ -28,6 +31,10 @@ public class AutoSaveThread extends Thread {
         }
     }
 
+    /**
+     * Salva le prenotazioni su un file costante
+     * @param prenotazioni le prenotazioni da salvare
+     */
     private void savePrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         ObjectOutputStream objectOutputStream;
         try {

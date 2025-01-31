@@ -1,14 +1,16 @@
 package UIPackage.CustomUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+/**
+ * Classe destinata a estendere il semplice JTextField per supportare il placeholder
+ */
 public class CustomTextField extends JTextField {
-    private String placeholder;
-    private Color placeholderColor = Color.GRAY;
+    private final String placeholder;
+    private final Color placeholderColor = Color.GRAY;
 
     public CustomTextField(String placeholder) {
         this.placeholder = placeholder;

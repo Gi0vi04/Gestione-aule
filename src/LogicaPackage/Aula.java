@@ -43,9 +43,4 @@ public class Aula implements Serializable {
         Aula aula = (Aula) obj;
         return nomeAula != null && nomeAula.equals(aula.nomeAula);
     }
-    @Override
-    public int hashCode() {
-        return nomeAula != null ? nomeAula.hashCode() : 0;
-    }
-
 }

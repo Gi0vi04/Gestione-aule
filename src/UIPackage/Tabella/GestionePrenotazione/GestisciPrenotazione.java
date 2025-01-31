@@ -14,6 +14,9 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * Classe destinata a realizzare l'interfaccia per gestire (aggiungere, modificare ed eliminare) una prenotazione
+ */
 public class GestisciPrenotazione extends JFrame {
     private String selectedNome;
     private Aula selectedAula;

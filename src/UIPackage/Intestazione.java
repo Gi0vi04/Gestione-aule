@@ -1,7 +1,7 @@
 package UIPackage;
 
 import LogicaPackage.Utils.FileIO;
-import UIPackage.Tabella.TabellaAule;
+import UIPackage.Tabella.TabellaPrenotazioni;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,11 +11,14 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Classe destinata a realizzare l'interfaccia dell'intestazione del software
+ */
 public class Intestazione extends JPanel {
-    TabellaAule tabellaAule;
+    TabellaPrenotazioni tabellaPrenotazioni;
 
-    public Intestazione(TabellaAule tabellaAule){
-        this.tabellaAule = tabellaAule;
+    public Intestazione(TabellaPrenotazioni tabellaPrenotazioni){
+        this.tabellaPrenotazioni = tabellaPrenotazioni;
         setLayout(new BorderLayout());
         setBackground(Color.LIGHT_GRAY);
         setBorder(new EmptyBorder(5,5,5,5));
@@ -24,10 +27,6 @@ public class Intestazione extends JPanel {
         add(createCTAPanel(),BorderLayout.EAST);
     }
 
-    /**
-     * Crea il pannello contenente i tre pulsanti per interagire con le prenotazioni della tabella
-     * @return
-     */
     private JPanel createCTAPanel() {
         JPanel ctaPanel = new JPanel();
         ctaPanel.setBackground(Color.LIGHT_GRAY);
@@ -35,9 +34,9 @@ public class Intestazione extends JPanel {
         JButton loadButton = new JButton("Carica prenotazioni");
         JButton printButton = new JButton("Stampa prenotazioni");
 
-        saveButton.addActionListener(e -> FileIO.savePrenotazioni(tabellaAule.getPrenotazioni()));
-        loadButton.addActionListener(e -> FileIO.loadPrenotazioni(tabellaAule));
-        printButton.addActionListener(e -> FileIO.printPrenotazioni(tabellaAule.getTable()));
+        saveButton.addActionListener(e -> FileIO.savePrenotazioni(tabellaPrenotazioni.getPrenotazioni()));
+        loadButton.addActionListener(e -> FileIO.loadPrenotazioni(tabellaPrenotazioni));
+        printButton.addActionListener(e -> FileIO.printPrenotazioni(tabellaPrenotazioni.getTable()));
 
         ctaPanel.add(printButton);
         ctaPanel.add(saveButton);
@@ -45,10 +44,6 @@ public class Intestazione extends JPanel {
         return ctaPanel;
     }
 
-    /**
-     * Crea il pannello contenente il selettore della data per modificare le prenotazioni visualizzate nella tabella
-     * @return
-     */
     private JPanel createSelectDatePanel(){
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         datePanel.setBackground(Color.LIGHT_GRAY);
@@ -66,7 +61,7 @@ public class Intestazione extends JPanel {
         dateSpinner.addChangeListener(e -> {
             Date dateSelected = (Date) dateSpinner.getValue();
             LocalDate localDateSelected = dateSelected.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            tabellaAule.setSelectedDate(localDateSelected);
+            tabellaPrenotazioni.setSelectedDate(localDateSelected);
         });
         
         datePanel.add(new JLabel("Data:"));
