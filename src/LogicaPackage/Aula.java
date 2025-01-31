@@ -2,19 +2,27 @@ package LogicaPackage;
 
 import java.io.Serializable;
 
+/**
+ * Classe destinata a generalizzare l'aula didattica e l'aula laboratorio
+ */
 public class Aula implements Serializable {
+    /**
+     * Variabile che contiene il nome dell'aula
+     */
     private String nomeAula;
+    /**
+     * Variabile che contiene la tipologia dell'aula
+     */
     private String tipologia;
+    /**
+     * Variabile che contiene il numero dell'aula
+     */
     private int numeroAula;
+    /**
+     * Variabile che contiene la capienza dell'aula
+     */
     private int capienza;
 
-    /**
-     *
-     * @param numeroAula codice identificativo dell'aula
-     * @param nomeAula nome dell'aula
-     * @param tipologia tipologia dell'aula (Didattica o laboratorio)
-     * @param capienza capienza dell'aula
-     */
     public Aula(int numeroAula, String nomeAula, String tipologia, int capienza){
         this.numeroAula = numeroAula;
         this.nomeAula = nomeAula;
@@ -22,12 +30,25 @@ public class Aula implements Serializable {
         this.capienza = capienza;
     }
 
+    /**
+     * Getter del numero aula
+     * @return numero aula
+     */
     public int getNumeroAula() {
         return numeroAula;
     }
+    /**
+     * Getter del nome aula
+     * @return nome aula
+     */
     public String getNomeAula() {
         return nomeAula;
     }
+
+    /**
+     * Getter della tipologia aula
+     * @return tipologia aula
+     */
     public String getTipologia() {
         return tipologia;
     }

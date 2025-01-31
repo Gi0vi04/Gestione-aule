@@ -18,22 +18,70 @@ import java.util.*;
  * Classe destinata a realizzare l'interfaccia per gestire (aggiungere, modificare ed eliminare) una prenotazione
  */
 public class GestisciPrenotazione extends JFrame {
+    /**
+     * Variabile contenente il nome selezionato
+     */
     private String selectedNome;
+    /**
+     * Variabile contenente l'aula selezionata
+     */
     private Aula selectedAula;
+    /**
+     * Variabile contenente la motivazione selezionata
+     */
     private String selectedMotivazione;
+    /**
+     * Variabile contenente la data selezionata
+     */
     private LocalDate selectedDate;
+    /**
+     * Variabile contenente l'ora di inizio selezionata
+     */
     private LocalTime selectedOraInizio;
+    /**
+     * Variabile contenente l'ora di fine selezionata
+     */
     private LocalTime selectedOraFine;
 
+    /**
+     * Variabile contenente la lista delle prenotazioni
+     */
     private final ArrayList<Prenotazione> prenotazioni;
+    /**
+     * Variabile contenente il vettore delle aule
+     */
     private final Aula[] aule;
+    /**
+     * Variabile contenente l'interfaccia per le operazioni su una prenotazione
+     */
     private final PrenotazioneListener prenotazioneListener;
+    /**
+     * Variabile contenente la prenotazione selezionata (se presente)
+     */
     private final Prenotazione selectedPrenotazione;
 
+    /**
+     * Variabile contenente la ComboBox sull'orario di inizio
+     */
     private JComboBox<LocalTime> oraInizioCombo;
+    /**
+     * Variabile contenente la ComboBox sull'orario di fine
+     */
     private JComboBox<LocalTime> oraFineCombo;
+    /**
+     * Variabile contenente il bottone di conferma
+     */
     private final JButton buttonSubmit;
 
+    /**
+     * Costruttore dell'interfaccia grafica per la "Nuova prenotazione"
+     * @param row riga selezionata
+     * @param column colonna selezionata
+     * @param selectedDate data selezionata (visualizzata dalla tabella)
+     * @param prenotazioni lista prenotazioni presenti
+     * @param aule lista delle aule presenti
+     * @param prenotazioneListener interfaccia che gestisce le azioni possibili (creazione, modifica, cancellazione)
+     */
     public GestisciPrenotazione(int row, int column, LocalDate selectedDate, ArrayList<Prenotazione> prenotazioni, Aula[] aule, PrenotazioneListener prenotazioneListener) {
         super("Nuova prenotazione");
         setResizable(false);
@@ -67,6 +115,14 @@ public class GestisciPrenotazione extends JFrame {
 
         super.setLocationRelativeTo(null);
     }
+
+    /**
+     * Costruttore dell'interfaccia grafica per "Modifica (e cancella) prenotazione"
+     * @param prenotazioni lista prenotazioni presenti
+     * @param aule lista delle aule
+     * @param prenotazioneListener interfaccia che gestisce le azioni possibili (creazione, modifica, cancellazione)
+     * @param selectedPrenotazione prenotazione selezionata (cliccata nella tabella)
+     */
     public GestisciPrenotazione(ArrayList<Prenotazione> prenotazioni, Aula[] aule, PrenotazioneListener prenotazioneListener, Prenotazione selectedPrenotazione) {
         super("Modifica prenotazione");
         setResizable(false);
@@ -101,34 +157,63 @@ public class GestisciPrenotazione extends JFrame {
         super.setLocationRelativeTo(null);
     }
 
+    /**
+     * Setter del nome selezionato
+     * @param selectedNome nome selezionato
+     */
     public void setSelectedNome(String selectedNome){
         this.selectedNome = selectedNome;
 
         buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
+    /**
+     * Setter dell'aula selezionata
+     * @param selectedAula aula selezionata
+     */
     public void setSelectedAula(Aula selectedAula) {
         this.selectedAula = selectedAula;
 
         updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione));
         updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
     }
+    /**
+     * Setter della motivazione selezionata
+     * @param selectedMotivazione motivazione selezionata
+     */
     public void setSelectedMotivazione(String selectedMotivazione){
         this.selectedMotivazione = selectedMotivazione;
     }
+    /**
+     * Setter della data selezionata
+     * @param selectedDate data selezionata
+     */
     public void setSelectedDate(LocalDate selectedDate){
         this.selectedDate = selectedDate;
 
         updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione));
         updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
     }
+    /**
+     * Setter dell'ora di inizio selezionata
+     * @param oraInizio ora di inizio selezionata
+     */
     public void setSelectedOraInizio(LocalTime oraInizio) {
         this.selectedOraInizio = oraInizio;
 
         updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
     }
+    /**
+     * Setter dell'ora di fine selezionata
+     * @param oraFine ora di fine selezionata
+     */
     public void setSelectedOraFine(LocalTime oraFine) {
         this.selectedOraFine = oraFine;
     }
+
+    /**
+     * Funzione che aggiorna gli orari di inizio presenti nella ComboBox
+     * @param orariInizioDisponibili orari di inizio disponibili (selezionabili)
+     */
     public void updateOraInizioCombo(ArrayList<LocalTime> orariInizioDisponibili){
         DefaultComboBoxModel<LocalTime> model = new DefaultComboBoxModel<>();
         model.addAll(orariInizioDisponibili);
@@ -148,6 +233,10 @@ public class GestisciPrenotazione extends JFrame {
 
         buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
     }
+    /**
+     * Funzione che aggiorna gli orari di fine presenti nella ComboBox
+     * @param orariFineDisponibili orari di fine disponibili (selezionabili)
+     */
     public void updateOraFineCombo(ArrayList<LocalTime> orariFineDisponibili){
         DefaultComboBoxModel<LocalTime> model = new DefaultComboBoxModel<>();
         model.addAll(orariFineDisponibili);

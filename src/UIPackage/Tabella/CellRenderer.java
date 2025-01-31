@@ -12,6 +12,9 @@ import java.awt.*;
  * Classe destinata al rendering della cella della tabella, supportando la modifica del colore e delle informazioni stampate
  */
 public class CellRenderer extends JPanel implements TableCellRenderer {
+    /**
+     * Costruttore del renderer della cella
+     */
     public CellRenderer() {
         super();
     }

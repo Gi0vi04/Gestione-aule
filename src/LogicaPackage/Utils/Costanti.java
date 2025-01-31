@@ -18,8 +18,17 @@ public final class Costanti {
     }
 
     // Definizione delle costanti
+    /**
+     * Stringa costante della parola "Didattica"
+     */
     public static final String DIDATTICA = "Didattica";
+    /**
+     * Stringa costante della parola "Laboratorio"
+     */
     public static final String LABORATORIO = "Laboratorio";
+    /**
+     * Lista contenente gli orari (costanti) ammessi per una prenotazione
+     */
     public static final ArrayList<LocalTime> ORARI_AMMESSI = new ArrayList<>(Arrays.asList(
             LocalTime.of(8, 0),
             LocalTime.of(9, 0),
@@ -33,9 +42,15 @@ public final class Costanti {
             LocalTime.of(17, 0),
             LocalTime.of(18, 0)
     ));
+    /**
+     * Vettore contenente le possibili motivazioni di prenotazione
+     */
     public static final String[] MOTIVAZIONI = {
             "Lezione", "Esame", "Tutorato", "Ricevimento", "Lauree", "Conferenza"
     };
+    /**
+     * Mappa MOTIVAZIONE-COLORE per ottenere un rapido ed elegante matching
+     */
     public static final Map<String, Color> COLORI_MOTIVAZIONI = Map.of(
             "Lezione", new Color(0xF6F740),
             "Esame", new Color(0xFE938C),
@@ -44,6 +59,9 @@ public final class Costanti {
             "Lauree", new Color(0xF55929),
             "Conferenza", new Color(0x0FB37F)
     );
+    /**
+     * Costante contenente il percorso (e il nome) del file di salvataggio automatico
+     */
     public static final String AUTOSAVE_PATH = "autosave.prenotazioni";
 }
 

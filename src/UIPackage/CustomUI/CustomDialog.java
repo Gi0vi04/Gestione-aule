@@ -8,6 +8,12 @@ import java.awt.*;
  * Classe destinata a mostrare un pop-up di dialogo.
  */
 public class CustomDialog extends JDialog {
+    /**
+     * Costruttore del CustomDialog per lanciare un avviso custom
+     * @param title titolo dell'avviso
+     * @param subtitle sottotitolo dell'avviso
+     * @param text testo dell'avviso
+     */
     public CustomDialog(String title, String subtitle, String text) {
         super();
         setTitle(title);

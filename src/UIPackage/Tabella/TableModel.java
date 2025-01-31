@@ -9,7 +9,13 @@ import java.util.ArrayList;
  * Classe destinata a realizzare il modello della tabella delle prenotazioni
  */
 public class TableModel extends AbstractTableModel {
+    /**
+     * Variabile contenente i nomi delle colonne
+     */
     private final String[] columnNames;
+    /**
+     * Variabile contenente le informazioni (dati) delle celle
+     */
     private final Object[][] data;
 
     public TableModel(ArrayList<Aula> aule){

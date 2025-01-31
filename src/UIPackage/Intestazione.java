@@ -15,8 +15,15 @@ import java.util.Date;
  * Classe destinata a realizzare l'interfaccia dell'intestazione del software
  */
 public class Intestazione extends JPanel {
+    /**
+     * Variabile che contiene il riferimento alla tabella delle prenotazioni
+     */
     TabellaPrenotazioni tabellaPrenotazioni;
 
+    /**
+     * Costruttore dell'interfaccia grafica dell'intestazioe del software
+     * @param tabellaPrenotazioni tabella contenente le prenotazioni
+     */
     public Intestazione(TabellaPrenotazioni tabellaPrenotazioni){
         this.tabellaPrenotazioni = tabellaPrenotazioni;
         setLayout(new BorderLayout());

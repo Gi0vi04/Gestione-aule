@@ -9,9 +9,19 @@ import java.awt.event.FocusListener;
  * Classe destinata a estendere il semplice JTextField per supportare il placeholder
  */
 public class CustomTextField extends JTextField {
+    /**
+     * Variabile che contiene il testo del placeholder
+     */
     private final String placeholder;
+    /**
+     * Variabile che contiene il colore (costante) del placeholder
+     */
     private final Color placeholderColor = Color.GRAY;
 
+    /**
+     * Costruttore del CustomTextField con placeholder
+     * @param placeholder il testo del placeholder
+     */
     public CustomTextField(String placeholder) {
         this.placeholder = placeholder;
         addFocusListener(new FocusListener() {

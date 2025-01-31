@@ -4,23 +4,35 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Classe destinata a realizzare l'istanza di una prenotazione
+ */
 public class Prenotazione implements Serializable {
+    /**
+     * Variabile che contiene il nome della prenotazione
+     */
     private String nome;
+    /**
+     * Variabile che contiene l'aula prenotata
+     */
     private Aula aula;
+    /**
+     * Variabile che contiene la motivazione della prenotazione
+     */
     private String motivazione;
+    /**
+     * Variabile che contiene la data della prenotazione
+     */
     private LocalDate data;
+    /**
+     * Variabile che contiene l'ora di inizio della prenotazione
+     */
     private LocalTime oraInizio;
+    /**
+     * Variabile che contiene l'ora di fine della prenotazione
+     */
     private LocalTime oraFine;
 
-    /**
-     *
-     * @param nome nome del prenotante
-     * @param aula aula prenotata
-     * @param motivazione motivazione della prenotazione
-     * @param data data della prenotazione
-     * @param oraInizio orario di inizio della prenotazione
-     * @param oraFine orario di fine della prenotazione
-     */
     public Prenotazione(String nome, Aula aula, String motivazione, LocalDate data, LocalTime oraInizio, LocalTime oraFine){
         this.nome = nome;
         this.aula = aula;
@@ -30,21 +42,45 @@ public class Prenotazione implements Serializable {
         this.oraFine = oraFine;
     }
 
+    /**
+     * Getter del nome della prenotazione
+     * @return nome della prenotazione
+     */
     public String getNome() {
         return nome;
     }
+    /**
+     * Getter dell'aula prenotata
+     * @return aula prenotata
+     */
     public Aula getAula() {
         return aula;
     }
+    /**
+     * Getter della motivazione della prenotazione
+     * @return motivazione della prenotazione
+     */
     public String getMotivazione() {
         return motivazione;
     }
+    /**
+     * Getter della data di prenotazione
+     * @return data di prenotazione
+     */
     public LocalDate getData() {
         return data;
     }
+    /**
+     * Getter dell'ora di inizio della prenotazione
+     * @return ora di inizio della prenotazione
+     */
     public LocalTime getOraInizio() {
         return oraInizio;
     }
+    /**
+     * Getter dell'ora di fine della prenotazione
+     * @return ora di fine della prenotazione
+     */
     public LocalTime getOraFine() {
         return oraFine;
     }

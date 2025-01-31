@@ -13,6 +13,11 @@ public class AutoSaveThread extends Thread {
     private final TabellaPrenotazioni tabellaPrenotazioni;
     private final String filePath;
 
+    /**
+     * Costruttore del thread di autosalvataggio
+     * @param tabellaPrenotazioni tabella contenente le prenotazioni da salvare
+     * @param filePath percorso del file di autosalvataggio
+     */
     public AutoSaveThread(TabellaPrenotazioni tabellaPrenotazioni, String filePath) {
         this.tabellaPrenotazioni = tabellaPrenotazioni;
         this.filePath = filePath;

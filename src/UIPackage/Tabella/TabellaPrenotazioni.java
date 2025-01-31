@@ -18,9 +18,21 @@ import java.util.ArrayList;
  * Classe destinata alla realizzazione dell'interfaccia della tabella delle prenotazioni
  */
 public class TabellaPrenotazioni extends JPanel implements PrenotazioneListener {
+    /**
+     * Variabile che contiene la tabella
+     */
     private final JTable table;
+    /**
+     * Variabile che contiene la lista delle aule
+     */
     private final ArrayList<Aula> aule;
+    /**
+     * Variabile contenente la lista delle prenotazioni
+     */
     private ArrayList<Prenotazione> prenotazioni;
+    /**
+     * Variabile che contiene la data selezionata (e visualizzata nella tabella)
+     */
     private LocalDate selectedDate;
 
     public TabellaPrenotazioni() {
@@ -83,19 +95,39 @@ public class TabellaPrenotazioni extends JPanel implements PrenotazioneListener 
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Getter della tabella delle prenotazioni
+     * @return tabella delle prenotazioni
+     */
     public JTable getTable(){
         return table;
     }
+    /**
+     * Getter della lista delle prenotazioni
+     * @return lista delle prenotazioni
+     */
     public ArrayList<Prenotazione> getPrenotazioni(){
         return prenotazioni;
     }
+    /**
+     * Getter della data selezionata
+     * @return data selezionata
+     */
     public LocalDate getSelectedDate(){
         return selectedDate;
     }
 
+    /**
+     * Setter delle prenotazioni
+     * @param prenotazioni lista delle prenotazioni
+     */
     public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
+    /**
+     * Setter della data selezionata
+     * @param selectedDate data selezionata
+     */
     public void setSelectedDate(LocalDate selectedDate) {
         this.selectedDate = selectedDate;
         refreshTable(true);
@@ -103,6 +135,7 @@ public class TabellaPrenotazioni extends JPanel implements PrenotazioneListener 
 
     /**
      * Aggiorna la tabella inserendo le prenotazioni presenti
+     * @param clearTable flag che indica se la tabella deve essere ripulita prima del refresh
      */
     public void refreshTable(boolean clearTable){
         LocalTime referenceTime = LocalTime.parse("08:00");

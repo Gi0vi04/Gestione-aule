@@ -8,7 +8,14 @@ import UIPackage.Tabella.TabellaPrenotazioni;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Classe destinata all'avvio del software
+ */
 public class Main {
+    /**
+     * Funzione di avviso del software
+     * @param args argomenti passati da terminale (non utilizzati)
+     */
     public static void main(String[] args) {
         JFrame mainFrame = new JFrame("Gestione aule");
         mainFrame.setLayout(new BorderLayout());

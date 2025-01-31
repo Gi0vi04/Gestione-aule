@@ -1,7 +1,7 @@
 package LogicaPackage.Utils;
 
 import LogicaPackage.Aula;
-import LogicaPackage.AulaDidattica;
+import LogicaPackage.Didattica;
 import LogicaPackage.Laboratorio;
 import LogicaPackage.Prenotazione;
 import UIPackage.CustomUI.CustomFileChooser;
@@ -40,7 +40,7 @@ public final class FileIO {
 
                 String[] values = line.split(",");
                 if(values[2].equals(Costanti.DIDATTICA)){
-                    aule.add(new AulaDidattica(Integer.parseInt(values[0]), values[1], Integer.parseInt(values[3]), Boolean.parseBoolean(values[4]), Boolean.parseBoolean(values[5])));
+                    aule.add(new Didattica(Integer.parseInt(values[0]), values[1], Integer.parseInt(values[3]), Boolean.parseBoolean(values[4]), Boolean.parseBoolean(values[5])));
                 }
                 else{
                     aule.add(new Laboratorio(Integer.parseInt(values[0]), values[1], Integer.parseInt(values[3]), Boolean.parseBoolean(values[4]), Boolean.parseBoolean(values[5])));
@@ -58,6 +58,7 @@ public final class FileIO {
 
     /**
      * Salva le prenotazioni su un file scelto dall'utente
+     * @param prenotazioni le prenotazioni da salvare
      */
     public static void savePrenotazioni(ArrayList<Prenotazione> prenotazioni){
         CustomFileChooser fileChooser = new CustomFileChooser();
@@ -88,6 +89,7 @@ public final class FileIO {
 
     /**
      * Carica le prenotazioni da un file scelto dall'utente
+     * @param tabellaPrenotazioni la tabella sulla quale verranno caricate le prenotazioni
      */
     public static void loadPrenotazioni(TabellaPrenotazioni tabellaPrenotazioni){
         CustomFileChooser fileChooser = new CustomFileChooser();
