@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+/**
+ * Classe destinata a mantenere valori costanti nel tempo
+ */
 public final class Costanti {
 
     // Costruttore privato per evitare istanziazioni della classe

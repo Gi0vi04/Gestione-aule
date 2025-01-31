@@ -11,9 +11,13 @@ import UIPackage.Tabella.TabellaAule;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Classe destinata a mantenere le funzioni di lettura e scrittura da file.
+ */
 public final class FileIO {
 
     // Costruttore privato per evitare l'instanziazione
@@ -22,7 +26,7 @@ public final class FileIO {
     }
 
     /**
-     * Legge le aule (costanti) dal file "aule.txt"
+     * Carica le aule (costanti) dal file "aule.txt"
      * @return il vettore di aule
      */
     public static ArrayList<Aula> loadAule(){
@@ -128,12 +132,21 @@ public final class FileIO {
 
     /**
      * Permette di stampare le prenotazioni visualizzate nella tabella
+     * @param table la tabella da stampare
      */
     public static void printPrenotazioni(JTable table){
-        try {
-            table.print();
-        } catch (PrinterException e) {
-            throw new RuntimeException(e);
+        PrinterJob job = PrinterJob.getPrinterJob();
+
+        // Mostra la finestra di dialogo di stampa
+        if (job.printDialog()) {
+            try {
+                job.setPrintable(table.getPrintable(JTable.PrintMode.FIT_WIDTH, null, null));
+                job.print();
+            } catch (PrinterException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("[STAMPA DELLE PRENOTAZIONI]: Stampa annullata.");
         }
     }
 }
