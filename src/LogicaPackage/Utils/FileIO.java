@@ -14,6 +14,7 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Classe destinata a mantenere le funzioni di lettura e scrittura da file.
@@ -31,10 +32,9 @@ public final class FileIO {
      */
     public static ArrayList<Aula> loadAule(){
         ArrayList<Aula> aule = new ArrayList<>();
-        File input = new File("aule.txt");
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(input));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(FileIO.class.getClassLoader().getResourceAsStream("aule.txt"))));
             while(reader.ready()){
                 String line = reader.readLine();
 
@@ -122,7 +122,9 @@ public final class FileIO {
                     catch (EOFException e) { break; }
                 }
             }
-            catch (ClassNotFoundException | IOException e) { new CustomDialog("Caricamento delle prenotazioni", "Errore durante il caricamento delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state caricate."); }
+            catch (ClassNotFoundException | IOException e) {
+                new CustomDialog("Caricamento delle prenotazioni", "Errore durante il caricamento delle prenotazioni", "Qualcosa non ha funzionato e le tue prenotazioni non sono state caricate.");
+            }
             finally {
                 tabellaPrenotazioni.setPrenotazioni(prenotazioniCaricate);
                 tabellaPrenotazioni.refreshTable(true);

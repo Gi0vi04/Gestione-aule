@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Gestione aule - Progetto OOP:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Gestione_aule___Progetto_OOP_jar</output-path>
+    <root id="archive" name="Gestione aule - Progetto OOP.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/manifest/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/aule.txt" />
+      </element>
+      <element id="module-output" name="Gestione aule - Progetto OOP" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/aule.txt" />
+    </root>
+  </artifact>
+</component>
