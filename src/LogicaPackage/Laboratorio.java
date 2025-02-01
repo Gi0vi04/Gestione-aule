@@ -50,4 +50,13 @@ public class Laboratorio extends Aula {
     public void setPreseElettrichePresente(boolean preseElettrichePresente) {
         this.isPreseElettrichePresente = preseElettrichePresente;
     }
+
+    /**
+     * Funzione che ritorna la presenza o meno di computer e prese elettriche sotto forma di stringa
+     * @return stringa con i dettagli
+     */
+    @Override
+    public String getDettagli() {
+        return  "Computer [" + (isPcPresente ? "✓" : "✗") + "], Prese elettriche [" + (isPreseElettrichePresente ? "✓" : "✗") + "]";
+    }
 }

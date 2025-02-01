@@ -52,4 +52,13 @@ public class Didattica extends Aula implements Serializable {
     public void setVideoproiettorePresente(boolean videoproiettorePresente) {
         this.isVideoproiettorePresente = videoproiettorePresente;
     }
+
+    /**
+     * Funzione che ritorna la presenza o meno di lavagna e videoproiettore sotto forma di stringa
+     * @return stringa con i dettagli
+     */
+    @Override
+    public String getDettagli() {
+        return  "Lavagna [" + (isLavagnaPresente ? "✓" : "✗") + "], Videoproiettore [" + (isVideoproiettorePresente ? "✓" : "✗") + "]";
+    }
 }

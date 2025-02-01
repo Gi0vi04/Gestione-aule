@@ -69,6 +69,10 @@ public class GestisciPrenotazione extends JFrame {
      */
     private JComboBox<LocalTime> oraFineCombo;
     /**
+     * Riferimento all'interfaccia di riepilogo prenotazione
+     */
+    private final RiepilogoPrenotazione riepilogoPrenotazione;
+    /**
      * Variabile contenente il bottone di conferma
      */
     private final JButton buttonSubmit;
@@ -98,6 +102,7 @@ public class GestisciPrenotazione extends JFrame {
         this.prenotazioneListener = prenotazioneListener;
         this.selectedPrenotazione = null;
 
+        this.riepilogoPrenotazione = new RiepilogoPrenotazione(this);
         this.buttonSubmit = new JButton("Conferma");
 
         // Creo il mainPanel
@@ -115,7 +120,6 @@ public class GestisciPrenotazione extends JFrame {
 
         super.setLocationRelativeTo(null);
     }
-
     /**
      * Costruttore dell'interfaccia grafica per "Modifica (e cancella) prenotazione"
      * @param prenotazioni lista prenotazioni presenti
@@ -139,6 +143,7 @@ public class GestisciPrenotazione extends JFrame {
         this.prenotazioneListener = prenotazioneListener;
         this.selectedPrenotazione = selectedPrenotazione;
 
+        this.riepilogoPrenotazione = new RiepilogoPrenotazione(this);
         this.buttonSubmit = new JButton("Modifica");
 
         // Creo il mainPanel
@@ -157,6 +162,25 @@ public class GestisciPrenotazione extends JFrame {
         super.setLocationRelativeTo(null);
     }
 
+    public String getSelectedNome(){
+        return selectedNome;
+    }
+    public Aula getSelectedAula(){
+        return selectedAula;
+    }
+    public String getSelectedMotivazione() {
+        return selectedMotivazione;
+    }
+    public LocalDate getSelectedDate() {
+        return selectedDate;
+    }
+    public LocalTime getSelectedOraInizio() {
+        return selectedOraInizio;
+    }
+    public LocalTime getSelectedOraFine() {
+        return selectedOraFine;
+    }
+
     /**
      * Setter del nome selezionato
      * @param selectedNome nome selezionato
@@ -165,6 +189,7 @@ public class GestisciPrenotazione extends JFrame {
         this.selectedNome = selectedNome;
 
         buttonSubmit.setEnabled(Helpers.isFormPrenotazioneValido(selectedNome, oraInizioCombo, oraFineCombo));
+        riepilogoPrenotazione.aggiornaRiepilogo();
     }
     /**
      * Setter dell'aula selezionata
@@ -175,6 +200,7 @@ public class GestisciPrenotazione extends JFrame {
 
         updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione));
         updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
+        riepilogoPrenotazione.aggiornaRiepilogo();
     }
     /**
      * Setter della motivazione selezionata
@@ -182,6 +208,8 @@ public class GestisciPrenotazione extends JFrame {
      */
     public void setSelectedMotivazione(String selectedMotivazione){
         this.selectedMotivazione = selectedMotivazione;
+
+        riepilogoPrenotazione.aggiornaRiepilogo();
     }
     /**
      * Setter della data selezionata
@@ -192,6 +220,7 @@ public class GestisciPrenotazione extends JFrame {
 
         updateOraInizioCombo(Helpers.calcolaOrariInizioDisponibili(prenotazioni, selectedAula, selectedDate, selectedPrenotazione));
         updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
+        riepilogoPrenotazione.aggiornaRiepilogo();
     }
     /**
      * Setter dell'ora di inizio selezionata
@@ -201,6 +230,7 @@ public class GestisciPrenotazione extends JFrame {
         this.selectedOraInizio = oraInizio;
 
         updateOraFineCombo(Helpers.calcolaOrariFineDisponibili(prenotazioni, selectedAula, selectedDate, selectedOraInizio, selectedPrenotazione));
+        riepilogoPrenotazione.aggiornaRiepilogo();
     }
     /**
      * Setter dell'ora di fine selezionata
@@ -208,6 +238,8 @@ public class GestisciPrenotazione extends JFrame {
      */
     public void setSelectedOraFine(LocalTime oraFine) {
         this.selectedOraFine = oraFine;
+
+        riepilogoPrenotazione.aggiornaRiepilogo();
     }
 
     /**
@@ -287,6 +319,9 @@ public class GestisciPrenotazione extends JFrame {
         JPanel footerPanel = new JPanel();
         footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
 
+        footerPanel.add(Box.createVerticalStrut(5));
+        footerPanel.add(riepilogoPrenotazione);
+        footerPanel.add(Box.createVerticalStrut(5));
         footerPanel.add(createNuovaPrenotazioneCTAPanel());
         return footerPanel;
     }
@@ -294,6 +329,9 @@ public class GestisciPrenotazione extends JFrame {
         JPanel footerPanel = new JPanel();
         footerPanel.setLayout(new BoxLayout(footerPanel, BoxLayout.Y_AXIS));
 
+        footerPanel.add(Box.createVerticalStrut(5));
+        footerPanel.add(riepilogoPrenotazione);
+        footerPanel.add(Box.createVerticalStrut(5));
         footerPanel.add(createModificaPrenotazioneCTAPanel());
         return footerPanel;
     }

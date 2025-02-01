@@ -44,7 +44,6 @@ public abstract class Aula implements Serializable {
     public String getNomeAula() {
         return nomeAula;
     }
-
     /**
      * Getter della tipologia aula
      * @return tipologia aula
@@ -52,10 +51,15 @@ public abstract class Aula implements Serializable {
     public String getTipologia() {
         return tipologia;
     }
+    public int getCapienza(){
+        return capienza;
+    }
+
+    public abstract String getDettagli();
 
     @Override
     public String toString(){
-        return nomeAula;
+        return nomeAula + " (" + capienza + " posti)";
     }
     @Override
     public boolean equals(Object obj) {
