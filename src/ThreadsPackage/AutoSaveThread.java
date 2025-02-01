@@ -26,12 +26,16 @@ public class AutoSaveThread extends Thread {
     @Override
     public void run() {
         while (true) {
+            ArrayList<Prenotazione> prenotazioni = tabellaPrenotazioni.getPrenotazioni();
+            // Evito di salvare il "vuoto"
+            if(!prenotazioni.isEmpty()){
+                savePrenotazioni(prenotazioni);
+            }
+
             try {
-                Thread.sleep(10000);
-                savePrenotazioni(tabellaPrenotazioni.getPrenotazioni());
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
+                throw new RuntimeException(e);
             }
         }
     }
