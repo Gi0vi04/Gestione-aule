@@ -34,6 +34,10 @@ public class TabellaPrenotazioni extends JPanel implements PrenotazioneListener 
      * Variabile che contiene la data selezionata (e visualizzata nella tabella)
      */
     private LocalDate selectedDate;
+    /**
+     * Riferimento al frame aperto per gestire le prenotazoni
+     */
+    private GestisciPrenotazione frameGestionePrenotazione;
 
     public TabellaPrenotazioni() {
         setLayout(new BorderLayout());
@@ -58,19 +62,22 @@ public class TabellaPrenotazioni extends JPanel implements PrenotazioneListener 
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int row = table.getSelectedRow();
-                int column = table.getSelectedColumn();
+                // Se la finestra è aperta, non può più essere aperta
+                if(frameGestionePrenotazione == null || !frameGestionePrenotazione.isDisplayable()){
+                    int row = table.getSelectedRow();
+                    int column = table.getSelectedColumn();
 
-                if(column == 0 || selectedDate.isBefore(LocalDate.now())) return;
+                    if(column == 0 || selectedDate.isBefore(LocalDate.now())) return;
 
-                Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
-                if(prenotazione == null){
-                    GestisciPrenotazione nuovaPrenotazione = new GestisciPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaPrenotazioni.this);
-                    nuovaPrenotazione.setVisible(true);
-                }
-                else{
-                    GestisciPrenotazione modificaPrenotazione = new GestisciPrenotazione(prenotazioni, aule.toArray(new Aula[0]), TabellaPrenotazioni.this, prenotazione);
-                    modificaPrenotazione.setVisible(true);
+                    Prenotazione prenotazione = (Prenotazione) table.getValueAt(row, column);
+                    if(prenotazione == null){
+                        frameGestionePrenotazione = new GestisciPrenotazione(row, column, selectedDate, prenotazioni, aule.toArray(new Aula[0]), TabellaPrenotazioni.this);
+                    }
+                    else{
+                        frameGestionePrenotazione = new GestisciPrenotazione(prenotazioni, aule.toArray(new Aula[0]), TabellaPrenotazioni.this, prenotazione);
+                    }
+                    frameGestionePrenotazione.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    frameGestionePrenotazione.setVisible(true);
                 }
             }
         });
