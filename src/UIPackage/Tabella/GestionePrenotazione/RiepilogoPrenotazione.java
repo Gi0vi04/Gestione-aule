@@ -5,7 +5,6 @@ import LogicaPackage.Utils.Costanti;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 public class RiepilogoPrenotazione extends JPanel {

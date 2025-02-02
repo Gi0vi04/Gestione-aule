@@ -51,9 +51,6 @@ public abstract class Aula implements Serializable {
     public String getTipologia() {
         return tipologia;
     }
-    public int getCapienza(){
-        return capienza;
-    }
 
     public abstract String getDettagli();
 

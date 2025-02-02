@@ -11,27 +11,27 @@ public class Prenotazione implements Serializable {
     /**
      * Variabile che contiene il nome della prenotazione
      */
-    private String nome;
+    private final String nome;
     /**
      * Variabile che contiene l'aula prenotata
      */
-    private Aula aula;
+    private final Aula aula;
     /**
      * Variabile che contiene la motivazione della prenotazione
      */
-    private String motivazione;
+    private final String motivazione;
     /**
      * Variabile che contiene la data della prenotazione
      */
-    private LocalDate data;
+    private final LocalDate data;
     /**
      * Variabile che contiene l'ora di inizio della prenotazione
      */
-    private LocalTime oraInizio;
+    private final LocalTime oraInizio;
     /**
      * Variabile che contiene l'ora di fine della prenotazione
      */
-    private LocalTime oraFine;
+    private final LocalTime oraFine;
 
     public Prenotazione(String nome, Aula aula, String motivazione, LocalDate data, LocalTime oraInizio, LocalTime oraFine){
         this.nome = nome;
