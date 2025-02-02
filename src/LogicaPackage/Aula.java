@@ -53,6 +53,8 @@ public abstract class Aula implements Serializable {
     }
 
     public abstract String getDettagli();
+    public abstract int getMaxHours();
+    public abstract int getHoursStep();
 
     @Override
     public String toString(){

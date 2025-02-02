@@ -55,8 +55,8 @@ public final class Helpers {
      * @return lista degli orari di fine disponibili
      */
     public static ArrayList<LocalTime> calcolaOrariFineDisponibili(ArrayList<Prenotazione> prenotazioni, Aula selectedAula, LocalDate selectedDate, LocalTime selectedOraInizio, Prenotazione selectedPrenotazione) {
-        int hoursInterval = selectedAula.getTipologia().equals(Costanti.DIDATTICA) ? 1 : 2;
-        int maxDuration = selectedAula.getTipologia().equals(Costanti.DIDATTICA) ? 8 : 4;
+        int maxHours = selectedAula.getMaxHours();
+        int hoursStep = selectedAula.getHoursStep();
 
         LocalTime maxOrarioFine = LocalTime.of(19, 0); // Imposto 19:00 perchè userò isBefore
         for (Prenotazione prenotazione : prenotazioni) {
@@ -68,13 +68,13 @@ public final class Helpers {
         }
 
         ArrayList<LocalTime> orariFineDisponibili = new ArrayList<>();
-        LocalTime currentOrario = LocalTime.from(selectedOraInizio).plusHours(hoursInterval);
+        LocalTime currentOrario = selectedOraInizio.plusHours(hoursStep);
         // Scelgo se utilizzare come maxOrarioFine la durata massima oppure se ricado prima in una prenotazione (o esco fuori dal range)
-        if(selectedOraInizio.plusHours(maxDuration + 1).isBefore(maxOrarioFine) && selectedOraInizio.plusHours(maxDuration + 1).isAfter(LocalTime.of(8,0)))
-            maxOrarioFine = selectedOraInizio.plusHours(maxDuration + 1);
+        if(selectedOraInizio.plusHours(maxHours + 1).isBefore(maxOrarioFine) && selectedOraInizio.plusHours(maxHours + 1).isAfter(LocalTime.of(8,0)))
+            maxOrarioFine = selectedOraInizio.plusHours(maxHours + 1);
         while(currentOrario.isBefore(maxOrarioFine)){
             orariFineDisponibili.add(currentOrario);
-            currentOrario = currentOrario.plusHours(hoursInterval);
+            currentOrario = currentOrario.plusHours(hoursStep);
         }
 
         return orariFineDisponibili;

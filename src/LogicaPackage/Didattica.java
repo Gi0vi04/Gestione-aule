@@ -31,4 +31,20 @@ public class Didattica extends Aula implements Serializable {
     public String getDettagli() {
         return  "Lavagna [" + (isLavagnaPresente ? "✓" : "✗") + "], Videoproiettore [" + (isVideoproiettorePresente ? "✓" : "✗") + "]";
     }
+    /**
+     * Ritorna il numero massimo di ore prenotabili consecutivamente
+     * @return numero massimo di ore prenotabili consecutivamente
+     */
+    @Override
+    public int getMaxHours() {
+        return 8;
+    }
+    /**
+     * Ritorna l'intervallo di ore prenotabili
+     * @return intervallo di ore prenotabili
+     */
+    @Override
+    public int getHoursStep() {
+        return 1;
+    }
 }
