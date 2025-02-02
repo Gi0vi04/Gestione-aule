@@ -2,9 +2,6 @@
   <artifact type="jar" name="Gestione aule - Progetto OOP:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Gestione_aule___Progetto_OOP_jar</output-path>
     <root id="archive" name="Gestione aule - Progetto OOP.jar">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
-      </element>
       <element id="module-output" name="Gestione aule - Progetto OOP" />
     </root>
   </artifact>

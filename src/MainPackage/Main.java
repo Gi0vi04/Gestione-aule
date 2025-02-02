@@ -13,7 +13,7 @@ import java.awt.*;
  */
 public class Main {
     /**
-     * Funzione di avviso del software
+     * Funzione di avvio del software
      * @param args argomenti passati da terminale (non utilizzati)
      */
     public static void main(String[] args) {
