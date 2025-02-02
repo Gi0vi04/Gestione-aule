@@ -12,20 +12,21 @@ Le funzionalità principali del software sono:
 ## Come utilizzare il software
 Per utilizzare il software basterà scaricare il file Gestione-aule.jar e avviarlo col comando:
     
-
+```
 java -jar Gestione-aule.jar
-
+```
 
 ## Installazione per Sviluppatori
 Se sei interessato a contribuire allo sviluppo di Splash Greco, segui questi passaggi per configurare l'ambiente di sviluppo locale:
 1. *Clona il repository*
 
-git clone https://github.com/tuo-username/splashgreco.git
-cd splashgreco
+```
+git clone https://github.com/gi0vi04/gestione-aule
+```
 
 2. *Compila il codice sorgente*
 
-Potrai compilarlo da un IDE oppure manualmente da terminale col comando javac [package]/[nomeFile.java]
+Potrai compilarlo da un IDE oppure manualmente da terminale col comando ```javac [package]/[nomeFile.java]```
 
 3. *Esegui il software*
 Eseguilo da un IDE oppure col comando java MainPackage.Main
