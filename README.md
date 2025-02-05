@@ -1,5 +1,5 @@
 # Gestione aule
-
+[Tesina2425.pdf](https://github.com/user-attachments/files/18677200/Tesina2425.pdf)
 Questo software è il risultato di un progetto per l'esame di Programmazione ad Oggetti del secondo anno di Informatica all'università degli studi di Modena e Reggio Emilia.
 
 ## Funzionalità principali
