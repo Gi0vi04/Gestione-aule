@@ -9,7 +9,7 @@ Le funzionalità principali del software sono:
 - *Modifica delle prenotazioni*: Cliccando su una prenotazione nella tabella è possibile modificarla o cancellarla.
 
 ## Come utilizzare il software
-Per utilizzare il software basterà scaricare il file Gestione-aule.jar e avviarlo col comando:
+Per utilizzare il software basterà scaricare il file [Gestione-aule.jar](https://github.com/Gi0vi04/Gestione-aule/releases/download/v1.0/Gestione-aule.jar) e avviarlo col comando:
     
 ```
 java -jar Gestione-aule.jar
